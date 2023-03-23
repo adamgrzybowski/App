@@ -21,7 +21,6 @@ import * as User from '../../actions/User';
 import * as Modal from '../../actions/Modal';
 import modalCardStyleInterpolator from './modalCardStyleInterpolator';
 import createResponsiveStackNavigator from './ResponsiveStackNavigator/createResponsiveStackNavigator';
-import NotFoundPage from '../../../pages/ErrorPage/NotFoundPage';
 import getCurrentUrl from '../currentUrl';
 
 // Modal Stack Navigators
@@ -31,6 +30,7 @@ import * as App from '../../actions/App';
 import * as Download from '../../actions/Download';
 import * as Session from '../../actions/Session';
 import RightModalStack from './RightModalStack';
+import FullScreenModalStack from './FullScreenModalStack';
 
 let currentUserEmail;
 Onyx.connect({
@@ -236,6 +236,11 @@ class AuthScreens extends React.Component {
                         return ConciergePage;
                     }}
                 />
+                <RootStack.Screen
+                    name="FullScreenModalStack"
+                    options={defaultScreenOptions}
+                    component={FullScreenModalStack}
+                />
 
                 {/* Note: Each modal must have it's own stack navigator since we want to be able to navigate to any
                 modal subscreens e.g. `/settings/profile` and this will allow us to navigate while inside the modal. We
@@ -245,12 +250,6 @@ class AuthScreens extends React.Component {
                     name="RightModalStack"
                     options={RightModalStackScreenOptions}
                     component={RightModalStack}
-                    listeners={modalScreenListeners}
-                />
-                <RootStack.Screen
-                    name={SCREENS.NOT_FOUND}
-                    options={{headerShown: false}}
-                    component={NotFoundPage}
                     listeners={modalScreenListeners}
                 />
             </RootStack.Navigator>

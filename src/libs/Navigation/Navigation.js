@@ -1,16 +1,15 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import lodashGet from 'lodash/get';
-import {Keyboard} from 'react-native';
-import {DrawerActions, getPathFromState, StackActions} from '@react-navigation/native';
+import {getPathFromState, StackActions} from '@react-navigation/native';
 import Onyx from 'react-native-onyx';
 import Log from '../Log';
 import DomUtils from '../DomUtils';
 import linkTo from './linkTo';
 import ROUTES from '../../ROUTES';
-import DeprecatedCustomActions from './DeprecatedCustomActions';
 import ONYXKEYS from '../../ONYXKEYS';
 import linkingConfig from './linkingConfig';
 import navigationRef from './navigationRef';
+import NAVIGATORS from '../../NAVIGATORS';
 
 let resolveNavigationIsReadyPromise;
 const navigationIsReadyPromise = new Promise((resolve) => {
@@ -77,56 +76,16 @@ function setIsNavigating(isNavigatingValue) {
 }
 
 /**
- * Opens the LHN drawer.
- * @private
- */
-function openDrawer() {
-    if (!canNavigate('openDrawer')) {
-        return;
-    }
-
-    navigationRef.current.dispatch(DrawerActions.openDrawer());
-    Keyboard.dismiss();
-}
-
-/**
- * Close the LHN drawer.
- * @private
- */
-function closeDrawer() {
-    return
-    if (!canNavigate('closeDrawer')) {
-        return;
-    }
-
-    navigationRef.current.dispatch(DrawerActions.closeDrawer());
-}
-
-/**
- * @param {Boolean} isSmallScreenWidth
- * @returns {String}
- */
-function getDefaultDrawerState(isSmallScreenWidth) {
-    if (didTapNotificationBeforeReady) {
-        return 'closed';
-    }
-    return isSmallScreenWidth ? 'open' : 'closed';
-}
-
-/**
  * @private
  * @param {Boolean} shouldOpenDrawer
  */
-function goBack(shouldOpenDrawer = true) {
+function goBack() {
     if (!canNavigate('goBack')) {
         return;
     }
 
     if (!navigationRef.current.canGoBack()) {
         Log.hmmm('[Navigation] Unable to go back');
-        if (shouldOpenDrawer) {
-            openDrawer();
-        }
         return;
     }
 
@@ -187,22 +146,18 @@ function navigate(route = ROUTES.HOME) {
 }
 
 /**
- * Dismisses a screen presented modally and returns us back to the previous view.
- *
- * @param {Boolean} [shouldOpenDrawer]
+ * Dismisses the last modal stack if there is any
  */
-function dismissModal(shouldOpenDrawer = false) {
+function dismissModal() {
     if (!canNavigate('dismissModal')) {
         return;
     }
-
-    const normalizedShouldOpenDrawer = _.isBoolean(shouldOpenDrawer)
-        ? shouldOpenDrawer
-        : false;
-
-    DeprecatedCustomActions.navigateBackToRootDrawer();
-    if (normalizedShouldOpenDrawer) {
-        openDrawer();
+    const rootState = navigationRef.getRootState();
+    const lastRoute = _.last(rootState.routes);
+    if (lastRoute.name === NAVIGATORS.RIGHT_MODAL_NAVIGATOR) {
+        navigationRef.current.dispatch(StackActions.pop());
+    } else {
+        Log.hmmm('[Navigation] dismissModal failed because there is no modal stack to dismiss');
     }
 }
 
@@ -300,8 +255,6 @@ export default {
     isActiveRoute,
     getActiveRoute,
     goBack,
-    closeDrawer,
-    getDefaultDrawerState,
     setDidTapNotification,
     isNavigationReady,
     setIsNavigationReady,

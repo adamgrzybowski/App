@@ -20,7 +20,7 @@ import Navigation from '../Navigation';
 import * as User from '../../actions/User';
 import * as Modal from '../../actions/Modal';
 import modalCardStyleInterpolator from './modalCardStyleInterpolator';
-import createResponsiveStackNavigator from './ResponsiveStackNavigator/createResponsiveStackNavigator';
+import createResponsiveStackNavigator from './createResponsiveStackNavigator';
 import getCurrentUrl from '../currentUrl';
 
 // Modal Stack Navigators
@@ -29,8 +29,10 @@ import defaultScreenOptions from './defaultScreenOptions';
 import * as App from '../../actions/App';
 import * as Download from '../../actions/Download';
 import * as Session from '../../actions/Session';
-import RightModalStack from './RightModalStack';
-import FullScreenModalStack from './FullScreenModalStack';
+import RightModalStack from './Navigators/RightModalNavigator';
+import FullScreenModalStack from './Navigators/FullScreenNavigator';
+import CentralPaneNavigator from './Navigators/CentralPaneNavigator';
+import NAVIGATORS from '../../../NAVIGATORS';
 
 let currentUserEmail;
 Onyx.connect({
@@ -192,7 +194,7 @@ class AuthScreens extends React.Component {
                     initialParams={{openOnAdminRoom: openOnAdminRoom === 'true'}}
                 />
                 <RootStack.Screen
-                    name={SCREENS.REPORT}
+                    name={NAVIGATORS.CENTRAL_PANE_NAVIGATOR}
                     options={{
                         headerShown: false,
                         title: 'New Expensify',
@@ -203,11 +205,7 @@ class AuthScreens extends React.Component {
                             height: '100%',
                         },
                     }}
-                    getComponent={() => {
-                        const ReportScreen = require('../../../pages/home/ReportScreen').default;
-                        return ReportScreen;
-                    }}
-                    initialParams={{openOnAdminRoom: openOnAdminRoom === 'true'}}
+                    component={CentralPaneNavigator}
                 />
                 <RootStack.Screen
                     name="ValidateLogin"
@@ -237,7 +235,7 @@ class AuthScreens extends React.Component {
                     }}
                 />
                 <RootStack.Screen
-                    name="FullScreenModalStack"
+                    name={NAVIGATORS.FULL_SCREEN_NAVIGATOR}
                     options={defaultScreenOptions}
                     component={FullScreenModalStack}
                 />
@@ -247,7 +245,7 @@ class AuthScreens extends React.Component {
                 are also using a custom navigator on web so even if a modal does not have any subscreens it still must
                 use a navigator */}
                 <RootStack.Screen
-                    name="RightModalStack"
+                    name={NAVIGATORS.RIGHT_MODAL_NAVIGATOR}
                     options={RightModalStackScreenOptions}
                     component={RightModalStack}
                     listeners={modalScreenListeners}

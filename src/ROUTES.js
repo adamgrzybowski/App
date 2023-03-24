@@ -54,7 +54,7 @@ export default {
     NEW_GROUP: 'new/group',
     NEW_CHAT: 'new/chat',
     REPORT,
-    REPORT_WITH_ID: 'r/:reportID',
+    REPORT_WITH_ID: 'r/:reportID?',
     getReportRoute: reportID => `r/${reportID}`,
 
     /** This is a utility route used to go to the user's concierge chat, or the sign-in page if the user's not authenticated */

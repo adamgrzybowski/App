@@ -20,7 +20,6 @@ import ONYXKEYS from '../../../../ONYXKEYS';
 import withNavigation from '../../../../components/withNavigation';
 import * as Welcome from '../../../../libs/actions/Welcome';
 import withNavigationFocus from '../../../../components/withNavigationFocus';
-import withDrawerState from '../../../../components/withDrawerState';
 
 /**
  * @param {Object} [policy]
@@ -237,7 +236,6 @@ export default compose(
     withLocalize,
     withNavigation,
     withNavigationFocus,
-    withDrawerState,
     withWindowDimensions,
     withOnyx({
         allPolicies: {

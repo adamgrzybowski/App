@@ -25,7 +25,6 @@ import compose from '../../libs/compose';
 import networkPropTypes from '../../components/networkPropTypes';
 import withWindowDimensions, {windowDimensionsPropTypes} from '../../components/withWindowDimensions';
 import OfflineWithFeedback from '../../components/OfflineWithFeedback';
-import withDrawerState, {withDrawerPropTypes} from '../../components/withDrawerState';
 import ReportFooter from './report/ReportFooter';
 import Banner from '../../components/Banner';
 import withLocalize from '../../components/withLocalize';
@@ -73,7 +72,6 @@ const propTypes = {
     network: networkPropTypes.isRequired,
 
     ...windowDimensionsPropTypes,
-    ...withDrawerPropTypes,
     ...viewportOffsetTopPropTypes,
 };
 
@@ -319,7 +317,6 @@ export default compose(
     withViewportOffsetTop,
     withLocalize,
     withWindowDimensions,
-    withDrawerState,
     withNetwork(),
     withOnyx({
         isSidebarLoaded: {

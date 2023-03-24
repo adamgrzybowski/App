@@ -9,7 +9,6 @@ import Timing from '../../../libs/actions/Timing';
 import CONST from '../../../CONST';
 import compose from '../../../libs/compose';
 import withWindowDimensions, {windowDimensionsPropTypes} from '../../../components/withWindowDimensions';
-import {withDrawerPropTypes} from '../../../components/withDrawerState';
 import * as ReportScrollManager from '../../../libs/ReportScrollManager';
 import withLocalize, {withLocalizePropTypes} from '../../../components/withLocalize';
 import Performance from '../../../libs/Performance';
@@ -44,7 +43,6 @@ const propTypes = {
     network: networkPropTypes.isRequired,
 
     ...windowDimensionsPropTypes,
-    ...withDrawerPropTypes,
     ...withLocalizePropTypes,
 };
 

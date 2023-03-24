@@ -22,7 +22,6 @@ import AttachmentModal from '../../../components/AttachmentModal';
 import compose from '../../../libs/compose';
 import PopoverMenu from '../../../components/PopoverMenu';
 import withWindowDimensions, {windowDimensionsPropTypes} from '../../../components/withWindowDimensions';
-import withDrawerState from '../../../components/withDrawerState';
 import withLocalize, {withLocalizePropTypes} from '../../../components/withLocalize';
 import willBlurTextInputOnTapOutside from '../../../libs/willBlurTextInputOnTapOutside';
 import CONST from '../../../CONST';
@@ -911,7 +910,6 @@ ReportActionCompose.defaultProps = defaultProps;
 
 export default compose(
     withWindowDimensions,
-    withDrawerState,
     withNavigationFocus,
     withLocalize,
     withNetwork(),

@@ -3,7 +3,6 @@ import React from 'react';
 import {Animated} from 'react-native';
 import _ from 'underscore';
 import InvertedFlatList from '../../../components/InvertedFlatList';
-import withDrawerState, {withDrawerPropTypes} from '../../../components/withDrawerState';
 import compose from '../../../libs/compose';
 import * as ReportScrollManager from '../../../libs/ReportScrollManager';
 import styles from '../../../styles/styles';
@@ -52,7 +51,6 @@ const propTypes = {
     /** Information about the network */
     network: networkPropTypes.isRequired,
 
-    ...withDrawerPropTypes,
     ...windowDimensionsPropTypes,
 };
 
@@ -206,7 +204,6 @@ ReportActionsList.propTypes = propTypes;
 ReportActionsList.defaultProps = defaultProps;
 
 export default compose(
-    withDrawerState,
     withWindowDimensions,
     withPersonalDetails(),
     withNetwork(),

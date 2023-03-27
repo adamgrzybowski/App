@@ -137,7 +137,6 @@ class SidebarLinks extends React.Component {
 
         return (
             <View
-                accessibilityElementsHidden={this.props.isSmallScreenWidth && !this.props.isDrawerOpen}
                 accessibilityLabel="List of chats"
                 style={[styles.flex1, styles.h100]}
             >

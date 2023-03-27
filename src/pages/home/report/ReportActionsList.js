@@ -143,7 +143,6 @@ class ReportActionsList extends React.Component {
     render() {
         // Native mobile does not render updates flatlist the changes even though component did update called.
         // To notify there something changes we can use extraData prop to flatlist
-        const extraData = (!this.props.isDrawerOpen && this.props.isSmallScreenWidth) ? this.props.newMarkerReportActionID : undefined;
         const shouldShowReportRecipientLocalTime = ReportUtils.canShowReportRecipientLocalTime(this.props.personalDetails, this.props.report);
         return (
             <Animated.View style={[StyleUtils.fade(this.state.fadeInAnimation), styles.flex1]}>
@@ -193,7 +192,7 @@ class ReportActionsList extends React.Component {
                         this.props.onLayout(event);
                     }}
                     onScroll={this.props.onScroll}
-                    extraData={extraData}
+                    extraData={this.props.newMarkerReportActionID}
                 />
             </Animated.View>
         );

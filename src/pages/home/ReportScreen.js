@@ -203,7 +203,7 @@ class ReportScreen extends React.Component {
         const isLoadingInitialReportActions = _.isEmpty(this.props.reportActions) && this.props.report.isLoadingReportActions;
 
         // When the ReportScreen is not open/in the viewport, we want to "freeze" it for performance reasons
-        const freeze = this.props.isSmallScreenWidth && this.props.isFocused;
+        const freeze = this.props.isSmallScreenWidth && !this.props.isFocused;
 
         // the moment the ReportScreen becomes unfrozen we want to start the animation of the placeholder skeleton content
         // (which is shown, until all the actual views of the ReportScreen have been rendered)

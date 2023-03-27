@@ -38,7 +38,6 @@ import * as User from '../../../libs/actions/User';
 import Tooltip from '../../../components/Tooltip';
 import EmojiPickerButton from '../../../components/EmojiPicker/EmojiPickerButton';
 import * as DeviceCapabilities from '../../../libs/DeviceCapabilities';
-import toggleReportActionComposeView from '../../../libs/toggleReportActionComposeView';
 import OfflineIndicator from '../../../components/OfflineIndicator';
 import ExceededCommentLength from '../../../components/ExceededCommentLength';
 import withNavigationFocus from '../../../components/withNavigationFocus';
@@ -78,9 +77,6 @@ const propTypes = {
 
     /** Array of report actions for this report */
     reportActions: PropTypes.arrayOf(PropTypes.shape(reportActionPropTypes)),
-
-    /** Is the report view covered by the drawer */
-    isDrawerOpen: PropTypes.bool.isRequired,
 
     /** Is the window width narrow, like on a mobile device */
     isSmallScreenWidth: PropTypes.bool.isRequired,
@@ -207,11 +203,6 @@ class ReportActionCompose extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const sidebarOpened = !prevProps.isDrawerOpen && this.props.isDrawerOpen;
-        if (sidebarOpened) {
-            toggleReportActionComposeView(true);
-        }
-
         // We want to focus or refocus the input when a modal has been closed and the underlying screen is focused.
         // We avoid doing this on native platforms since the software keyboard popping
         // open creates a jarring and broken UX.

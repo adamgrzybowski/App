@@ -184,7 +184,7 @@ class SidebarLinks extends React.Component {
                         </OfflineWithFeedback>
                     </TouchableOpacity>
                 </View>
-                <Freeze freeze={this.props.isSmallScreenWidth && !this.props.isDrawerOpen && this.isSidebarLoaded}>
+                <Freeze freeze={this.props.isSmallScreenWidth && !this.props.isFocused && this.isSidebarLoaded}>
                     <LHNOptionsList
                         contentContainerStyles={[
                             styles.sidebarListContainer,

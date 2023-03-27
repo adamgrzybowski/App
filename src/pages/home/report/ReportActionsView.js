@@ -187,9 +187,8 @@ class ReportActionsView extends React.Component {
 
         // If the report was previously hidden by the side bar, or the view is expanded from mobile to desktop layout
         // we update the new marker position, mark the report as read, and fetch new report actions
-        const didSidebarClose = prevProps.isDrawerOpen && !this.props.isDrawerOpen;
         const didScreenSizeIncrease = prevProps.isSmallScreenWidth && !this.props.isSmallScreenWidth;
-        const didReportBecomeVisible = isReportFullyVisible && (didSidebarClose || didScreenSizeIncrease);
+        const didReportBecomeVisible = isReportFullyVisible && didScreenSizeIncrease;
         if (didReportBecomeVisible) {
             this.setState({
                 newMarkerReportActionID: ReportUtils.isUnread(this.props.report)

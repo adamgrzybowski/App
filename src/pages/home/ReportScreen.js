@@ -33,6 +33,7 @@ import FullPageNotFoundView from '../../components/BlockingViews/FullPageNotFoun
 import ReportHeaderSkeletonView from '../../components/ReportHeaderSkeletonView';
 import withViewportOffsetTop, {viewportOffsetTopPropTypes} from '../../components/withViewportOffsetTop';
 import * as ReportActionsUtils from '../../libs/ReportActionsUtils';
+import withNavigationFocus from '../../components/withNavigationFocus';
 
 const propTypes = {
     /** Navigation route context info provided by react navigation */
@@ -202,7 +203,7 @@ class ReportScreen extends React.Component {
         const isLoadingInitialReportActions = _.isEmpty(this.props.reportActions) && this.props.report.isLoadingReportActions;
 
         // When the ReportScreen is not open/in the viewport, we want to "freeze" it for performance reasons
-        const freeze = this.props.isSmallScreenWidth && this.props.isDrawerOpen;
+        const freeze = this.props.isSmallScreenWidth && this.props.isFocused;
 
         // the moment the ReportScreen becomes unfrozen we want to start the animation of the placeholder skeleton content
         // (which is shown, until all the actual views of the ReportScreen have been rendered)
@@ -278,7 +279,6 @@ class ReportScreen extends React.Component {
                                         report={this.props.report}
                                         session={this.props.session}
                                         isComposerFullSize={this.props.isComposerFullSize}
-                                        isDrawerOpen={this.props.isDrawerOpen}
                                         parentViewHeight={this.state.skeletonViewContainerHeight}
                                     />
                                     <ReportFooter
@@ -317,6 +317,7 @@ export default compose(
     withViewportOffsetTop,
     withLocalize,
     withWindowDimensions,
+    withNavigationFocus,
     withNetwork(),
     withOnyx({
         isSidebarLoaded: {

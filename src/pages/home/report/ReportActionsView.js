@@ -22,6 +22,7 @@ import EmojiPicker from '../../../components/EmojiPicker/EmojiPicker';
 import * as ReportActionsUtils from '../../../libs/ReportActionsUtils';
 import * as ReportUtils from '../../../libs/ReportUtils';
 import reportPropTypes from '../../reportPropTypes';
+import withNavigationFocus from '../../../components/withNavigationFocus';
 
 const propTypes = {
     /** The report currently being looked at */
@@ -206,14 +207,6 @@ class ReportActionsView extends React.Component {
             });
         }
 
-        // When the user navigates to the LHN the ReportActionsView doesn't unmount and just remains hidden.
-        // The next time we navigate to the same report (e.g. by swiping or tapping the LHN row) we want the new marker to clear.
-        const didSidebarOpen = !prevProps.isDrawerOpen && this.props.isDrawerOpen;
-        const didUserNavigateToSidebarAfterReadingReport = didSidebarOpen && !ReportUtils.isUnread(this.props.report);
-        if (didUserNavigateToSidebarAfterReadingReport) {
-            this.setState({newMarkerReportActionID: ''});
-        }
-
         // Checks to see if a report comment has been manually "marked as unread". All other times when the lastReadTime
         // changes it will be because we marked the entire report as read.
         const didManuallyMarkReportAsUnread = (prevProps.report.lastReadTime !== this.props.report.lastReadTime)
@@ -250,7 +243,7 @@ class ReportActionsView extends React.Component {
      * @returns {Boolean}
      */
     getIsReportFullyVisible() {
-        const isSidebarCoveringReportView = this.props.isSmallScreenWidth && this.props.isDrawerOpen;
+        const isSidebarCoveringReportView = this.props.isSmallScreenWidth && !this.props.isFocused;
         return Visibility.isVisible() && !isSidebarCoveringReportView;
     }
 
@@ -366,6 +359,7 @@ ReportActionsView.defaultProps = defaultProps;
 export default compose(
     Performance.withRenderTrace({id: '<ReportActionsView> rendering'}),
     withWindowDimensions,
+    withNavigationFocus,
     withLocalize,
     withNetwork(),
 )(ReportActionsView);

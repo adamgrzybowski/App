@@ -93,11 +93,6 @@ class FloatingActionButtonAndPopover extends React.Component {
      * @return {Boolean}
      */
     didScreenBecomeInactive(prevProps) {
-        // When the Drawer gets closed and ReportScreen is shown
-        if (!this.props.isDrawerOpen && prevProps.isDrawerOpen) {
-            return true;
-        }
-
         // When any other page is opened over LHN
         if (!this.props.isFocused && prevProps.isFocused) {
             return true;
@@ -113,11 +108,6 @@ class FloatingActionButtonAndPopover extends React.Component {
      * @return {Boolean}
      */
     isScreenInactive() {
-        // When drawer is closed and Report page is open
-        if (this.props.isSmallScreenWidth && !this.props.isDrawerOpen) {
-            return true;
-        }
-
         // When any other page is open
         if (!this.props.isFocused) {
             return true;

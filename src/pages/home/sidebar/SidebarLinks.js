@@ -29,6 +29,7 @@ import LHNOptionsList from '../../../components/LHNOptionsList/LHNOptionsList';
 import SidebarUtils from '../../../libs/SidebarUtils';
 import reportPropTypes from '../../reportPropTypes';
 import OfflineWithFeedback from '../../../components/OfflineWithFeedback';
+import withNavigationFocus from '../../../components/withNavigationFocus';
 
 const propTypes = {
     /** Toggles the navigation menu open and closed */
@@ -137,7 +138,7 @@ class SidebarLinks extends React.Component {
 
         return (
             <View
-                accessibilityElementsHidden={this.props.isSmallScreenWidth && !this.props.isDrawerOpen}
+                accessibilityElementsHidden={this.props.isSmallScreenWidth && !this.props.isFocused}
                 accessibilityLabel="List of chats"
                 style={[styles.flex1, styles.h100]}
             >
@@ -183,7 +184,7 @@ class SidebarLinks extends React.Component {
                         </OfflineWithFeedback>
                     </TouchableOpacity>
                 </View>
-                <Freeze freeze={this.props.isSmallScreenWidth && !this.props.isDrawerOpen && this.isSidebarLoaded}>
+                <Freeze freeze={this.props.isSmallScreenWidth && !this.props.isFocused && this.isSidebarLoaded}>
                     <LHNOptionsList
                         contentContainerStyles={[
                             styles.sidebarListContainer,
@@ -278,6 +279,7 @@ const policySelector = policy => policy && ({
 export default compose(
     withLocalize,
     withCurrentUserPersonalDetails,
+    withNavigationFocus,
     withWindowDimensions,
     withOnyx({
         // Note: It is very important that the keys subscribed to here are the same

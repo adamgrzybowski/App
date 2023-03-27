@@ -2,18 +2,16 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import lodashGet from 'lodash/get';
 import {withOnyx} from 'react-native-onyx';
-import _ from 'underscore';
 
 import FullScreenLoadingIndicator from '../../../components/FullscreenLoadingIndicator';
 import ONYXKEYS from '../../../ONYXKEYS';
 import Permissions from '../../Permissions';
-import Timing from '../../actions/Timing';
-import CONST from '../../../CONST';
 
 // Screens
 import ReportScreen from '../../../pages/home/ReportScreen';
 import * as ReportUtils from '../../ReportUtils';
 import reportPropTypes from '../../../pages/reportPropTypes';
+import getReportIDFromRoute from './getReportIDFromRoute';
 
 const propTypes = {
     /** Available reports that would be displayed in this navigator */
@@ -34,7 +32,12 @@ const propTypes = {
     route: PropTypes.shape({
         params: PropTypes.shape({
             openOnAdminRoom: PropTypes.bool,
+            reportID: PropTypes.string,
         }),
+    }).isRequired,
+
+    navigation: PropTypes.shape({
+        setParams: PropTypes.func,
     }).isRequired,
 };
 
@@ -53,66 +56,44 @@ const defaultProps = {
  * @param {Boolean} openOnAdminRoom
  * @returns {Object}
  */
-const getInitialReportScreenParams = (reports, ignoreDefaultRooms, policies, openOnAdminRoom) => {
-    const last = ReportUtils.findLastAccessedReport(reports, ignoreDefaultRooms, policies, openOnAdminRoom);
+const getLastAccessedReportID = (reports, ignoreDefaultRooms, policies, openOnAdminRoom) => {
+    const lastReport = ReportUtils.findLastAccessedReport(reports, ignoreDefaultRooms, policies, openOnAdminRoom);
 
-    // Fallback to empty if for some reason reportID cannot be derived - prevents the app from crashing
-    const reportID = lodashGet(last, 'reportID', '');
-    return {reportID: String(reportID)};
+    return lodashGet(lastReport, 'reportID');
 };
 
+// This wrapper is reponsible for opening the last accessed report if there is no reportID specified in the route params
 class ReportScreenWrapper extends Component {
     constructor(props) {
         super(props);
-        this.trackAppStartTiming = this.trackAppStartTiming.bind(this);
-        this.initialParams = getInitialReportScreenParams(
-            props.reports,
-            !Permissions.canUseDefaultRooms(props.betas),
-            props.policies,
-            lodashGet(props, 'route.params.openOnAdminRoom', false),
-        );
+        if (!getReportIDFromRoute(props.route)) {
+            const reportID = getLastAccessedReportID(
+                props.reports,
+                !Permissions.canUseDefaultRooms(props.betas),
+                props.policies,
+                lodashGet(props, 'route.params.openOnAdminRoom', false),
+            );
 
-        // When we have chat reports the moment this component got created
-        // we know that the data was served from storage/cache
-        this.isFromCache = _.size(props.reports) > 0;
+            if (reportID) {
+                props.navigation.setParams({reportID: String(reportID)});
+            }
+        }
     }
 
     shouldComponentUpdate(nextProps) {
-        const initialNextParams = getInitialReportScreenParams(
-            nextProps.reports,
-            !Permissions.canUseDefaultRooms(nextProps.betas),
-            nextProps.policies,
-            lodashGet(nextProps, 'route.params.openOnAdminRoom', false),
-        );
-        if (this.initialParams.reportID === initialNextParams.reportID) {
-            return false;
-        }
-
-        this.initialParams = initialNextParams;
-        return true;
-    }
-
-    trackAppStartTiming() {
-        // We only want to report timing events when rendering from cached data
-        if (!this.isFromCache) {
-            return;
-        }
-
-        Timing.end(CONST.TIMING.SIDEBAR_LOADED);
+        // Rerender if the route param raportID is different than the previos one.
+        // It should only happen when we got raportID undefined and we want to fill it with the last accessed raportID
+        if (getReportIDFromRoute(nextProps.route) !== getReportIDFromRoute(this.props.route)) { return true; }
+        return false;
     }
 
     render() {
-        // Wait until reports are fetched and there is a reportID in initialParams
-        if (!this.initialParams.reportID) {
-            return <FullScreenLoadingIndicator />;
+        // Wait until there is reportID in the route params
+        if (getReportIDFromRoute(this.props.route)) {
+            return <ReportScreen route={this.props.route} />;
         }
 
-        // After the app initializes and reports are available the home navigation is mounted
-        // This way routing information is updated (if needed) based on the initial report ID resolved.
-        // This is usually needed after login/create account and re-launches
-        return (
-            <ReportScreen initialParams={this.initialParams} />
-        );
+        return <FullScreenLoadingIndicator initialParams={this.props.route.params} />;
     }
 }
 

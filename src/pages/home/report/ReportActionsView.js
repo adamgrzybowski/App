@@ -159,10 +159,6 @@ class ReportActionsView extends React.Component {
             return true;
         }
 
-        if (this.props.isDrawerOpen !== nextProps.isDrawerOpen) {
-            return true;
-        }
-
         if (lodashGet(this.props.report, 'hasOutstandingIOU') !== lodashGet(nextProps.report, 'hasOutstandingIOU')) {
             return true;
         }

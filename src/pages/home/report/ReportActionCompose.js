@@ -661,7 +661,6 @@ class ReportActionCompose extends React.Component {
             && !this.props.isComposerFullSize;
 
         // Prevents focusing and showing the keyboard while the drawer is covering the chat.
-        const isComposeDisabled = this.props.isDrawerOpen && this.props.isSmallScreenWidth;
         const isBlockedFromConcierge = ReportUtils.chatIncludesConcierge(this.props.report) && User.isBlockedFromConcierge(this.props.blockedFromConcierge);
         const inputPlaceholder = this.getInputPlaceholder();
         const shouldUseFocusedColor = !isBlockedFromConcierge && !this.props.disabled && (this.state.isFocused || this.state.isDraggingOver);
@@ -815,7 +814,7 @@ class ReportActionCompose extends React.Component {
                                             onPasteFile={displayFileInModal}
                                             shouldClear={this.state.textInputShouldClear}
                                             onClear={() => this.setTextInputShouldClear(false)}
-                                            isDisabled={isComposeDisabled || isBlockedFromConcierge || this.props.disabled}
+                                            isDisabled={isBlockedFromConcierge || this.props.disabled}
                                             selection={this.state.selection}
                                             onSelectionChange={this.onSelectionChange}
                                             isFullComposerAvailable={this.state.isFullComposerAvailable}

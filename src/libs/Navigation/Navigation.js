@@ -248,6 +248,22 @@ function setIsReportScreenIsReady() {
     resolveReportScreenIsReadyPromise();
 }
 
+function getTopmostReportId() {
+    const state = navigationRef.getState();
+    const topmostCentralPane = state.routes.findLast(route => route.name === 'CentralPaneNavigator');
+
+    if (!topmostCentralPane.state && !topmostCentralPane.params) {
+        return '';
+    }
+
+    if (!topmostCentralPane.state && topmostCentralPane.params && topmostCentralPane.params.params) {
+        return topmostCentralPane.params.params.reportID;
+    }
+
+    const topmostReportId = topmostCentralPane.state.routes.findLast(route => route.name === 'Report').params.reportID;
+    return topmostReportId;
+}
+
 export default {
     canNavigate,
     navigate,
@@ -266,6 +282,7 @@ export default {
     setIsNavigating,
     isReportScreenReady,
     setIsReportScreenIsReady,
+    getTopmostReportId,
 };
 
 export {

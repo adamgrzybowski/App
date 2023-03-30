@@ -51,7 +51,7 @@ const BlockingView = props => (
         {props.shouldShowBackHomeLink
             ? (
                 <TextLink
-                    onPress={() => Navigation.navigate(ROUTES.REPORT)}
+                    onPress={() => Navigation.navigate(ROUTES.HOME)}
                     style={[styles.link, styles.mt2]}
                 >
                     {props.link}

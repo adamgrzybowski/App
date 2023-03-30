@@ -25,9 +25,7 @@ const propTypes = {
  */
 const ConciergePage = (props) => {
     if (_.has(props.session, 'authToken')) {
-        Navigation.isDrawerReady().then(() => {
-            Report.navigateToConciergeChat();
-        });
+        Report.navigateToConciergeChat();
     } else {
         Navigation.navigate();
     }

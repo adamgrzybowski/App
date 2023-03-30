@@ -4,7 +4,6 @@ import lodashGet from 'lodash/get';
 import lodashIntersection from 'lodash/intersection';
 import Onyx from 'react-native-onyx';
 import ExpensiMark from 'expensify-common/lib/ExpensiMark';
-import {InteractionManager} from 'react-native';
 import ONYXKEYS from '../ONYXKEYS';
 import CONST from '../CONST';
 import * as Localize from './Localize';
@@ -1555,16 +1554,17 @@ function getReportIDFromDeepLink(url) {
 /**
  * @param {String|null} url
  */
-function openReportFromDeepLink(url) {
-    const reportID = getReportIDFromDeepLink(url);
-    if (!reportID) {
-        return;
-    }
-    InteractionManager.runAfterInteractions(() => {
-        Navigation.isReportScreenReady().then(() => {
-            Navigation.navigate(ROUTES.getReportRoute(reportID));
-        });
-    });
+function openReportFromDeepLink() {
+    // TODO-NR Do we need this?
+    /* const reportID = getReportIDFromDeepLink(url); */
+    /* if (!reportID) { */
+    /*     return; */
+    /* } */
+    /* InteractionManager.runAfterInteractions(() => { */
+    /*     Navigation.isReportScreenReady().then(() => { */
+    /*         Navigation.navigate(ROUTES.getReportRoute(reportID)); */
+    /*     }); */
+    /* }); */
 }
 
 /**

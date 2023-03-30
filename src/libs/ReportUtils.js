@@ -1597,6 +1597,19 @@ function canRequestMoney(report) {
     return (!isPolicyExpenseChat(report) || report.isOwnPolicyExpenseChat);
 }
 
+function openReportFromDeepLink() {
+    // TODO-NR Do we need this?
+    /* const reportID = getReportIDFromDeepLink(url); */
+    /* if (!reportID) { */
+    /*     return; */
+    /* } */
+    /* InteractionManager.runAfterInteractions(() => { */
+    /*     Navigation.isReportScreenReady().then(() => { */
+    /*         Navigation.navigate(ROUTES.getReportRoute(reportID)); */
+    /*     }); */
+    /* }); */
+}
+
 /**
  * @param {Object} report
  * @param {Array} reportParticipants

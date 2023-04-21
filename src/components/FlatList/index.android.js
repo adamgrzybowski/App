@@ -44,6 +44,9 @@ function CustomFlatList(props) {
     const [scrollPosition, setScrollPosition] = useState({});
 
     const onScreenFocus = useCallback(() => {
+        if (!flatListRef.current || !scrollPosition.offset) {
+            return;
+        }
         if (flatListRef.current && scrollPosition.offset) {
             flatListRef.current.scrollToOffset({offset: scrollPosition.offset, animated: false});
         }

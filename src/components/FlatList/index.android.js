@@ -52,7 +52,7 @@ function CustomFlatList(props) {
         }
     }, [scrollPosition.offset, flatListRef]);
 
-    const onScreenBlur = useCallback(
+    const onScroll = useCallback(
         event => setScrollPosition({offset: event.nativeEvent.contentOffset.y}),
         [],
     );
@@ -67,7 +67,7 @@ function CustomFlatList(props) {
         <FlatList
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            onScroll={onScreenBlur}
+            onScroll={onScroll}
             ref={flatListRef}
         />
     );

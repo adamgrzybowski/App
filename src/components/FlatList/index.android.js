@@ -1,7 +1,6 @@
 import React, {
     forwardRef,
     useCallback,
-    useRef,
     useState,
 } from 'react';
 import {FlatList} from 'react-native';
@@ -40,21 +39,23 @@ const defaultProps = {
 // FlatList wrapped with the freeze component will lose its scroll state when frozen (only for Android).
 // CustomFlatList saves the offset and use it for scrollToOffset() when unfrozen.
 function CustomFlatList(props) {
-    const flatListRef = useRef(null);
     const [scrollPosition, setScrollPosition] = useState({});
 
     const onScreenFocus = useCallback(() => {
-        if (!flatListRef.current || !scrollPosition.offset) {
+        if (!props.innerRef.current || !scrollPosition.offset) {
             return;
         }
-        if (flatListRef.current && scrollPosition.offset) {
-            flatListRef.current.scrollToOffset({offset: scrollPosition.offset, animated: false});
+        if (props.innerRef.current && scrollPosition.offset) {
+            props.innerRef.current.scrollToOffset({offset: scrollPosition.offset, animated: false});
         }
-    }, [scrollPosition.offset, flatListRef]);
+    }, [scrollPosition.offset, props.innerRef]);
 
     const onScroll = useCallback(
-        event => setScrollPosition({offset: event.nativeEvent.contentOffset.y}),
-        [],
+        (event) => {
+            props.onScroll(event);
+            setScrollPosition({offset: event.nativeEvent.contentOffset.y});
+        },
+        [props],
     );
 
     useFocusEffect(
@@ -68,7 +69,7 @@ function CustomFlatList(props) {
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             onScroll={onScroll}
-            ref={flatListRef}
+            ref={props.innerRef}
         />
     );
 }

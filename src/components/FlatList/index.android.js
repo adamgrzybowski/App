@@ -50,14 +50,6 @@ function CustomFlatList(props) {
         }
     }, [scrollPosition.offset, props.innerRef]);
 
-    const onScroll = useCallback(
-        (event) => {
-            props.onScroll(event);
-            setScrollPosition({offset: event.nativeEvent.contentOffset.y});
-        },
-        [props],
-    );
-
     useFocusEffect(
         useCallback(() => {
             onScreenFocus();
@@ -68,7 +60,10 @@ function CustomFlatList(props) {
         <FlatList
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            onScroll={onScroll}
+            onScroll={event => props.onScroll(event)}
+            onMomentumScrollEnd={(event) => {
+                setScrollPosition({offset: event.nativeEvent.contentOffset.y});
+            }}
             ref={props.innerRef}
         />
     );

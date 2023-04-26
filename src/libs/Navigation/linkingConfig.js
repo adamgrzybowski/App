@@ -47,6 +47,7 @@ export default {
                             Settings_Workspaces: {
                                 path: ROUTES.SETTINGS_WORKSPACES,
                                 exact: true,
+                                upScreen: 'Settings_Root',
                             },
                             Settings_Preferences: {
                                 path: ROUTES.SETTINGS_PREFERENCES,
@@ -103,22 +104,27 @@ export default {
                             Settings_Profile: {
                                 path: ROUTES.SETTINGS_PROFILE,
                                 exact: true,
+                                upScreen: 'Settings_Root',
                             },
                             Settings_Pronouns: {
                                 path: ROUTES.SETTINGS_PRONOUNS,
                                 exact: true,
+                                upScreen: 'Settings_Profile',
                             },
                             Settings_Display_Name: {
                                 path: ROUTES.SETTINGS_DISPLAY_NAME,
                                 exact: true,
+                                upScreen: 'Settings_Profile',
                             },
                             Settings_Timezone: {
                                 path: ROUTES.SETTINGS_TIMEZONE,
                                 exact: true,
+                                upScreen: 'Settings_Profile',
                             },
                             Settings_Timezone_Select: {
                                 path: ROUTES.SETTINGS_TIMEZONE_SELECT,
                                 exact: true,
+                                upScreen: 'Settings_Timezone',
                             },
                             Settings_About: {
                                 path: ROUTES.SETTINGS_ABOUT,
@@ -131,29 +137,36 @@ export default {
                             Settings_ContactMethods: {
                                 path: ROUTES.SETTINGS_CONTACT_METHODS,
                                 exact: true,
+                                upScreen: 'Settings_Profile',
                             },
                             Settings_ContactMethodDetails: {
                                 path: ROUTES.SETTINGS_CONTACT_METHOD_DETAILS,
+                                upScreen: 'Settings_ContactMethods',
                             },
                             Settings_NewContactMethod: {
                                 path: ROUTES.SETTINGS_NEW_CONTACT_METHOD,
                                 exact: true,
+                                upScreen: 'Settings_NewContactMethod',
                             },
                             Settings_PersonalDetails_Initial: {
                                 path: ROUTES.SETTINGS_PERSONAL_DETAILS,
                                 exact: true,
+                                upScreen: 'Settings_Profile',
                             },
                             Settings_PersonalDetails_LegalName: {
                                 path: ROUTES.SETTINGS_PERSONAL_DETAILS_LEGAL_NAME,
                                 exact: true,
+                                upScreen: 'Settings_PersonalDetails_Initial',
                             },
                             Settings_PersonalDetails_DateOfBirth: {
                                 path: ROUTES.SETTINGS_PERSONAL_DETAILS_DATE_OF_BIRTH,
                                 exact: true,
+                                upScreen: 'Settings_PersonalDetails_Initial',
                             },
                             Settings_PersonalDetails_Address: {
                                 path: ROUTES.SETTINGS_PERSONAL_DETAILS_ADDRESS,
                                 exact: true,
+                                upScreen: 'Settings_PersonalDetails_Initial',
                             },
                             Workspace_Initial: {
                                 path: ROUTES.WORKSPACE_INITIAL,

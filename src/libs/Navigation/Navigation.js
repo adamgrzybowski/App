@@ -75,7 +75,7 @@ function navigate(route = ROUTES.HOME) {
     // More info: https://github.com/Expensify/App/issues/13146
     DomUtils.blurActiveElement();
 
-    linkTo(navigationRef.current, route);
+    linkTo(navigationRef, route);
 }
 
 /**

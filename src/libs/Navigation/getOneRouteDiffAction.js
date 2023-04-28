@@ -24,7 +24,8 @@ const getOneRouteDiffAction = (currentState, targetState) => {
     if (diff.length > 0) {
         return undefined;
     }
-    return CommonActions.navigate({..._.last(longerRoutes)});
+
+    return CommonActions.navigate({..._.last(aRoutes.length > bRoutes.length ? shorterRoutes : longerRoutes)});
 };
 
 export default getOneRouteDiffAction;

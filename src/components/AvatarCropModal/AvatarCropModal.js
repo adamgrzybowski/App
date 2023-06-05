@@ -18,7 +18,7 @@ import compose from '../../libs/compose';
 import styles from '../../styles/styles';
 import themeColors from '../../styles/themes/default';
 import Button from '../Button';
-import HeaderWithCloseButton from '../HeaderWithCloseButton';
+import HeaderWithBackButton from '../HeaderWithBackButton';
 import Icon from '../Icon';
 import * as Expensicons from '../Icon/Expensicons';
 import Modal from '../Modal';
@@ -97,7 +97,7 @@ const AvatarCropModal = (props) => {
         const {height, width} = event.nativeEvent.layout;
 
         // Even if the browser height is reduced too much, the relative height should not be negative
-        const relativeHeight = Math.max(height - styles.imageCropRotateButton.height, CONST.AVATAR_CROP_MODAL.INITIAL_SIZE);
+        const relativeHeight = Math.max(height, CONST.AVATAR_CROP_MODAL.INITIAL_SIZE);
         setImageContainerSize(Math.floor(Math.min(relativeHeight, width)));
     }, []);
 
@@ -378,9 +378,9 @@ const AvatarCropModal = (props) => {
             onModalHide={resetState}
         >
             {props.isSmallScreenWidth && <HeaderGap />}
-            <HeaderWithCloseButton
+            <HeaderWithBackButton
                 title={props.translate('avatarCropModal.title')}
-                onCloseButtonPress={props.onClose}
+                onBackButtonPress={props.onClose}
             />
             <Text style={[styles.mh5]}>{props.translate('avatarCropModal.description')}</Text>
             <GestureHandlerRootView onLayout={initializeImageContainer} style={[styles.alignSelfStretch, styles.m5, styles.flex1, styles.alignItemsCenter]}>
@@ -416,7 +416,6 @@ const AvatarCropModal = (props) => {
                                         icon={Expensicons.Rotate}
                                         iconFill={themeColors.inverse}
                                         iconStyles={[styles.mr0]}
-                                        style={[styles.imageCropRotateButton]}
                                         onPress={rotateImage}
                                     />
                                 </Tooltip>

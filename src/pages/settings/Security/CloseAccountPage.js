@@ -4,9 +4,7 @@ import {withOnyx} from 'react-native-onyx';
 import PropTypes from 'prop-types';
 import Str from 'expensify-common/lib/str';
 import _ from 'underscore';
-import HeaderWithCloseButton from '../../../components/HeaderWithCloseButton';
-import Navigation from '../../../libs/Navigation/Navigation';
-import ROUTES from '../../../ROUTES';
+import HeaderWithBackButton from '../../../components/HeaderWithBackButton';
 import * as User from '../../../libs/actions/User';
 import compose from '../../../libs/compose';
 import styles from '../../../styles/styles';
@@ -85,14 +83,11 @@ class CloseAccountPage extends Component {
     }
 
     render() {
-        const userEmailOrPhone = Str.removeSMSDomain(this.props.session.email);
+        const userEmailOrPhone = this.props.formatPhoneNumber(this.props.session.email);
         return (
             <ScreenWrapper includeSafeAreaPaddingBottom={false}>
-                <HeaderWithCloseButton
+                <HeaderWithBackButton
                     title={this.props.translate('closeAccountPage.closeAccount')}
-                    shouldShowBackButton
-                    onBackButtonPress={() => Navigation.navigate(ROUTES.SETTINGS_SECURITY)}
-                    onCloseButtonPress={() => Navigation.dismissModal(true)}
                 />
                 <Form
                     formID={ONYXKEYS.FORMS.CLOSE_ACCOUNT_FORM}

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import TextInput from '../../components/TextInput';
 import withLocalize, {withLocalizePropTypes} from '../../components/withLocalize';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import HeaderWithCloseButton from '../../components/HeaderWithCloseButton';
+import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import Form from '../../components/Form';
 import ONYXKEYS from '../../ONYXKEYS';
 import styles from '../../styles/styles';
@@ -37,14 +37,6 @@ class MoneyRequestDescriptionPage extends Component {
     }
 
     /**
-     * Closes the modal and clears the description from Onyx.
-     */
-    onCloseButtonPress() {
-        IOU.setMoneyRequestDescription('');
-        Navigation.dismissModal();
-    }
-
-    /**
      * Sets the money request comment by saving it to Onyx.
      *
      * @param {Object} value
@@ -57,12 +49,9 @@ class MoneyRequestDescriptionPage extends Component {
 
     render() {
         return (
-            <ScreenWrapper includeSafeAreaPaddingBottom={false}>
-                <HeaderWithCloseButton
+            <ScreenWrapper includeSafeAreaPaddingBottom={false} shouldEnableMaxHeight>
+                <HeaderWithBackButton
                     title={this.props.translate('common.description')}
-                    shouldShowBackButton
-                    onBackButtonPress={Navigation.goBack}
-                    onCloseButtonPress={this.onCloseButtonPress}
                 />
                 <Form
                     style={[styles.flexGrow1, styles.ph5]}

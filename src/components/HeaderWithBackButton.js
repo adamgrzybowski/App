@@ -28,17 +28,11 @@ const propTypes = {
     /** Method to trigger when pressing download button of the header */
     onDownloadButtonPress: PropTypes.func,
 
-    /** Method to trigger when pressing close button of the header */
-    onCloseButtonPress: PropTypes.func,
-
     /** Method to trigger when pressing back button of the header */
     onBackButtonPress: PropTypes.func,
 
     /** Method to trigger when pressing more options button of the header */
     onThreeDotsButtonPress: PropTypes.func,
-
-    /** Whether we should show a back icon */
-    shouldShowBackButton: PropTypes.bool,
 
     /** Whether we should show a border on the bottom of the Header */
     shouldShowBorderBottom: PropTypes.bool,
@@ -63,14 +57,17 @@ const propTypes = {
         left: PropTypes.number,
     }),
 
-    /** Whether we should show a close button */
-    shouldShowCloseButton: PropTypes.bool,
-
     /** Whether we should show the step counter */
     shouldShowStepCounter: PropTypes.bool,
 
     /** The guides call taskID to associate with the get assistance button, if we show it */
     guidesCallTaskID: PropTypes.string,
+
+    /** Whether we should show a close button */
+    shouldShowCloseButton: PropTypes.bool,
+
+    /** Method to trigger when pressing close button of the header */
+    onCloseButtonPress: PropTypes.func,
 
     /** Data to display a step counter in the header */
     stepCounter: PropTypes.shape({
@@ -87,16 +84,15 @@ const defaultProps = {
     title: '',
     subtitle: '',
     onDownloadButtonPress: () => {},
-    onCloseButtonPress: () => {},
-    onBackButtonPress: () => {},
+    onBackButtonPress: Navigation.goBack,
+    onCloseButtonPress: Navigation.dismissModal,
     onThreeDotsButtonPress: () => {},
-    shouldShowBackButton: false,
     shouldShowBorderBottom: false,
     shouldShowDownloadButton: false,
     shouldShowGetAssistanceButton: false,
     shouldShowThreeDotsButton: false,
-    shouldShowCloseButton: true,
     shouldShowStepCounter: true,
+    shouldShowCloseButton: false,
     guidesCallTaskID: '',
     stepCounter: null,
     threeDotsMenuItems: [],
@@ -106,7 +102,7 @@ const defaultProps = {
     },
 };
 
-class HeaderWithCloseButton extends Component {
+class HeaderWithBackButton extends Component {
     constructor(props) {
         super(props);
 
@@ -128,7 +124,7 @@ class HeaderWithCloseButton extends Component {
 
     render() {
         return (
-            <View style={[styles.headerBar, this.props.shouldShowBorderBottom && styles.borderBottom, this.props.shouldShowBackButton && styles.pl2]}>
+            <View style={[styles.headerBar, this.props.shouldShowBorderBottom && styles.borderBottom, !this.props.shouldShowCloseButton && styles.pl2]}>
                 <View style={[
                     styles.dFlex,
                     styles.flexRow,
@@ -138,7 +134,7 @@ class HeaderWithCloseButton extends Component {
                     styles.overflowHidden,
                 ]}
                 >
-                    {this.props.shouldShowBackButton && (
+                    {!this.props.shouldShowCloseButton && (
                         <Tooltip text={this.props.translate('common.back')}>
                             <Pressable
                                 onPress={() => {
@@ -222,11 +218,11 @@ class HeaderWithCloseButton extends Component {
     }
 }
 
-HeaderWithCloseButton.propTypes = propTypes;
-HeaderWithCloseButton.defaultProps = defaultProps;
+HeaderWithBackButton.propTypes = propTypes;
+HeaderWithBackButton.defaultProps = defaultProps;
 
 export default compose(
     withLocalize,
     withDelayToggleButtonState,
     withKeyboardState,
-)(HeaderWithCloseButton);
+)(HeaderWithBackButton);

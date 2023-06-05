@@ -2,7 +2,7 @@ import _ from 'underscore';
 import React from 'react';
 import {withCurrentUserPersonalDetailsPropTypes, withCurrentUserPersonalDetailsDefaultProps} from '../components/withCurrentUserPersonalDetails';
 import ScreenWrapper from '../components/ScreenWrapper';
-import HeaderWithCloseButton from '../components/HeaderWithCloseButton';
+import HeaderWithBackButton from '../components/HeaderWithBackButton';
 import withLocalize, {withLocalizePropTypes} from '../components/withLocalize';
 import ROUTES from '../ROUTES';
 import styles from '../styles/styles';
@@ -70,9 +70,15 @@ class YearPickerPage extends React.Component {
      * @param {String} text
      */
     filterYearList(text) {
-        this.setState({
-            inputText: text,
-            yearOptions: _.filter(this.yearList, year => year.text.includes(text.trim())),
+        const searchText = text.replace(CONST.REGEX.NON_NUMERIC, '');
+        this.setState((prevState) => {
+            if (searchText === prevState.inputText) {
+                return {};
+            }
+            return {
+                inputText: searchText,
+                yearOptions: _.filter(this.yearList, year => year.text.includes(searchText)),
+            };
         });
     }
 
@@ -80,11 +86,9 @@ class YearPickerPage extends React.Component {
         const headerMessage = this.state.inputText.trim() && !this.state.yearOptions.length ? this.props.translate('common.noResultsFound') : '';
         return (
             <ScreenWrapper includeSafeAreaPaddingBottom={false}>
-                <HeaderWithCloseButton
+                <HeaderWithBackButton
                     title={this.props.translate('yearPickerPage.year')}
-                    shouldShowBackButton
                     onBackButtonPress={() => Navigation.navigate(`${this.props.route.params.backTo}?year=${this.currentYear}` || ROUTES.HOME)}
-                    onCloseButtonPress={() => Navigation.dismissModal(true)}
                 />
                 <OptionsSelector
                     textInputLabel={this.props.translate('yearPickerPage.selectYear')}

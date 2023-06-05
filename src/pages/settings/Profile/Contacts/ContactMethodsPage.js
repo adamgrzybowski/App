@@ -7,7 +7,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {withOnyx} from 'react-native-onyx';
 import _ from 'underscore';
 import Button from '../../../../components/Button';
-import HeaderWithCloseButton from '../../../../components/HeaderWithCloseButton';
+import HeaderWithBackButton from '../../../../components/HeaderWithBackButton';
 import ScreenWrapper from '../../../../components/ScreenWrapper';
 import withLocalize, {withLocalizePropTypes} from '../../../../components/withLocalize';
 import CONST from '../../../../CONST';
@@ -83,13 +83,15 @@ const ContactMethodsPage = (props) => {
         // Default to using login key if we deleted login.partnerUserID optimistically
         // but still need to show the pending login being deleted while offline.
         const partnerUserID = login.partnerUserID || loginName;
+        const menuItemTitle = Str.isSMSLogin(partnerUserID) ? props.formatPhoneNumber(partnerUserID) : partnerUserID;
+
         return (
             <OfflineWithFeedback
                 pendingAction={pendingAction}
                 key={partnerUserID}
             >
                 <MenuItem
-                    title={Str.removeSMSDomain(partnerUserID)}
+                    title={menuItemTitle}
                     description={description}
                     onPress={() => Navigation.navigate(ROUTES.getEditContactMethodRoute(partnerUserID))}
                     brickRoadIndicator={indicator}
@@ -103,11 +105,8 @@ const ContactMethodsPage = (props) => {
 
     return (
         <ScreenWrapper>
-            <HeaderWithCloseButton
+            <HeaderWithBackButton
                 title={props.translate('contacts.contactMethods')}
-                shouldShowBackButton
-                onBackButtonPress={() => Navigation.navigate(ROUTES.SETTINGS_PROFILE)}
-                onCloseButtonPress={() => Navigation.dismissModal(true)}
             />
             <ScrollView>
                 <View style={[styles.ph5, styles.mv3, styles.flexRow, styles.flexWrap]}>

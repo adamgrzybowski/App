@@ -16,7 +16,7 @@ import themeColors from '../styles/themes/default';
 import compose from '../libs/compose';
 import withWindowDimensions, {windowDimensionsPropTypes} from './withWindowDimensions';
 import Button from './Button';
-import HeaderWithCloseButton from './HeaderWithCloseButton';
+import HeaderWithBackButton from './HeaderWithBackButton';
 import fileDownload from '../libs/fileDownload';
 import withLocalize, {withLocalizePropTypes} from './withLocalize';
 import ConfirmModal from './ConfirmModal';
@@ -86,6 +86,9 @@ class AttachmentModal extends PureComponent {
             modalType: CONST.MODAL.MODAL_TYPE.CENTERED_UNSWIPEABLE,
             isConfirmButtonDisabled: false,
             confirmButtonFadeAnimation: new Animated.Value(1),
+            file: props.originalFileName ? {
+                name: props.originalFileName,
+            } : undefined,
         };
 
         this.submitAndClose = this.submitAndClose.bind(this);
@@ -261,11 +264,13 @@ class AttachmentModal extends PureComponent {
                     propagateSwipe
                 >
                     {this.props.isSmallScreenWidth && <HeaderGap />}
-                    <HeaderWithCloseButton
+                    <HeaderWithBackButton
                         title={this.props.headerTitle || this.props.translate('common.attachment')}
                         shouldShowBorderBottom
                         shouldShowDownloadButton={this.props.allowDownload}
                         onDownloadButtonPress={() => this.downloadAttachment(source)}
+                        shouldShowCloseButton={!this.props.isSmallScreenWidth}
+                        onBackButtonPress={() => this.setState({isModalOpen: false})}
                         onCloseButtonPress={() => this.setState({isModalOpen: false})}
                     />
                     <View style={styles.imageModalImageCenterContainer}>

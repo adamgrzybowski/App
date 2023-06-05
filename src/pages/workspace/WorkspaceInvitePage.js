@@ -6,7 +6,7 @@ import _ from 'underscore';
 import lodashGet from 'lodash/get';
 import withLocalize, {withLocalizePropTypes} from '../../components/withLocalize';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import HeaderWithCloseButton from '../../components/HeaderWithCloseButton';
+import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import Navigation from '../../libs/Navigation/Navigation';
 import styles from '../../styles/styles';
 import compose from '../../libs/compose';
@@ -106,8 +106,8 @@ class WorkspaceInvitePage extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (
-            prevProps.preferredLocale !== this.props.preferredLocale
-            && this.state.welcomeNote === Localize.translate(prevProps.preferredLocale, 'workspace.invite.welcomeNote', {workspaceName: this.props.policy.name})
+            (prevProps.preferredLocale !== this.props.preferredLocale || prevProps.policy.name !== this.props.policy.name)
+            && this.state.welcomeNote === Localize.translate(prevProps.preferredLocale, 'workspace.invite.welcomeNote', {workspaceName: prevProps.policy.name})
         ) {
             this.setState({welcomeNote: this.getWelcomeNote()});
         }
@@ -300,21 +300,18 @@ class WorkspaceInvitePage extends React.Component {
         const policyName = lodashGet(this.props.policy, 'name');
 
         return (
-            <ScreenWrapper>
+            <ScreenWrapper shouldEnableMaxHeight>
                 {({didScreenTransitionEnd}) => (
                     <FullPageNotFoundView
                         shouldShow={_.isEmpty(this.props.policy)}
                         onBackButtonPress={() => Navigation.navigate(ROUTES.SETTINGS_WORKSPACES)}
                     >
                         <FormSubmit style={[styles.flex1]} onSubmit={this.inviteUser}>
-                            <HeaderWithCloseButton
+                            <HeaderWithBackButton
                                 title={this.props.translate('workspace.invite.invitePeople')}
                                 subtitle={policyName}
-                                onCloseButtonPress={() => this.clearErrors(true)}
                                 shouldShowGetAssistanceButton
                                 guidesCallTaskID={CONST.GUIDES_CALL_TASK_IDS.WORKSPACE_MEMBERS}
-                                shouldShowBackButton
-                                onBackButtonPress={() => Navigation.goBack()}
                             />
                             <View style={[styles.flex1]}>
                                 {didScreenTransitionEnd ? (

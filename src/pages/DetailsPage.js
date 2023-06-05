@@ -9,8 +9,7 @@ import styles from '../styles/styles';
 import Text from '../components/Text';
 import ONYXKEYS from '../ONYXKEYS';
 import Avatar from '../components/Avatar';
-import HeaderWithCloseButton from '../components/HeaderWithCloseButton';
-import Navigation from '../libs/Navigation/Navigation';
+import HeaderWithBackButton from '../components/HeaderWithBackButton';
 import ScreenWrapper from '../components/ScreenWrapper';
 import personalDetailsPropType from './personalDetailsPropType';
 import withLocalize, {withLocalizePropTypes} from '../components/withLocalize';
@@ -84,7 +83,6 @@ const getPhoneNumber = (details) => {
 class DetailsPage extends React.PureComponent {
     render() {
         const login = lodashGet(this.props.route.params, 'login', '');
-        const reportID = lodashGet(this.props.route.params, 'reportID', '');
         let details = lodashGet(this.props.personalDetails, login);
 
         if (!details) {
@@ -97,9 +95,6 @@ class DetailsPage extends React.PureComponent {
 
         const isSMSLogin = Str.isSMSLogin(details.login);
 
-        // If we have a reportID param this means that we
-        // arrived here via the ParticipantsPage and should be allowed to navigate back to it
-        const shouldShowBackButton = Boolean(reportID);
         const shouldShowLocalTime = !ReportUtils.hasAutomatedExpensifyEmails([details.login]) && details.timezone;
         let pronouns = details.pronouns;
 
@@ -108,14 +103,15 @@ class DetailsPage extends React.PureComponent {
             pronouns = this.props.translate(`pronouns.${localeKey}`);
         }
 
+        const phoneNumber = getPhoneNumber(details);
+        const displayName = isSMSLogin ? this.props.formatPhoneNumber(phoneNumber) : details.displayName;
+        const phoneOrEmail = isSMSLogin ? getPhoneNumber(details) : details.login;
+
         return (
             <ScreenWrapper>
                 <FullPageNotFoundView shouldShow={_.isEmpty(login)}>
-                    <HeaderWithCloseButton
+                    <HeaderWithBackButton
                         title={this.props.translate('common.details')}
-                        shouldShowBackButton={shouldShowBackButton}
-                        onBackButtonPress={() => Navigation.goBack()}
-                        onCloseButtonPress={() => Navigation.dismissModal()}
                     />
                     <View
                         pointerEvents="box-none"
@@ -127,9 +123,10 @@ class DetailsPage extends React.PureComponent {
                             <ScrollView>
                                 <View style={styles.avatarSectionWrapper}>
                                     <AttachmentModal
-                                        headerTitle={isSMSLogin ? this.props.toLocalPhone(details.displayName) : details.displayName}
+                                        headerTitle={displayName}
                                         source={ReportUtils.getFullSizeAvatar(details.avatar, details.login)}
                                         isAuthTokenRequired
+                                        originalFileName={details.originalFileName}
                                     >
                                         {({show}) => (
                                             <PressableWithoutFocus
@@ -151,7 +148,7 @@ class DetailsPage extends React.PureComponent {
                                     </AttachmentModal>
                                     {Boolean(details.displayName) && (
                                         <Text style={[styles.textHeadline, styles.mb6, styles.pre]} numberOfLines={1}>
-                                            {isSMSLogin ? this.props.toLocalPhone(details.displayName) : details.displayName}
+                                            {displayName}
                                         </Text>
                                     )}
                                     {details.login ? (
@@ -161,11 +158,13 @@ class DetailsPage extends React.PureComponent {
                                                     ? 'common.phoneNumber'
                                                     : 'common.email')}
                                             </Text>
-                                            <CommunicationsLink value={isSMSLogin ? getPhoneNumber(details) : details.login}>
-                                                <Tooltip text={isSMSLogin ? getPhoneNumber(details) : details.login}>
+                                            <CommunicationsLink
+                                                value={phoneOrEmail}
+                                            >
+                                                <Tooltip text={phoneOrEmail}>
                                                     <Text numberOfLines={1}>
                                                         {isSMSLogin
-                                                            ? this.props.toLocalPhone(getPhoneNumber(details))
+                                                            ? this.props.formatPhoneNumber(phoneNumber)
                                                             : details.login}
                                                     </Text>
                                                 </Tooltip>
@@ -186,7 +185,7 @@ class DetailsPage extends React.PureComponent {
                                 </View>
                                 {details.login !== this.props.session.email && (
                                     <MenuItem
-                                        title={`${this.props.translate('common.message')}${details.displayName}`}
+                                        title={`${this.props.translate('common.message')}${displayName}`}
                                         icon={Expensicons.ChatBubble}
                                         onPress={() => Report.navigateToAndOpenReport([details.login])}
                                         wrapperStyle={styles.breakAll}

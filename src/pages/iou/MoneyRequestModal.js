@@ -103,8 +103,29 @@ function MoneyRequestModal(props) {
         [reportParticipants.length],
     );
 
-    const [previousStepIndex, setPreviousStepIndex] = useState(-1);
-    const [currentStepIndex, setCurrentStepIndex] = useState(0);
+    const [stepIndexStack, setStepIndexStack] = useState([0]);
+
+    const getCurrentStepIndex = useCallback(() => stepIndexStack[stepIndexStack.length - 1], [stepIndexStack]);
+    const getPreviousStepIndex = useCallback(() => (stepIndexStack.length > 1 ? stepIndexStack[stepIndexStack.length - 2] : -1), [stepIndexStack]);
+
+    const [direction, setDirection] = useState(null);
+
+    const stepIndexStackPush = useCallback(
+        (stepIndex) => {
+            setStepIndexStack([...stepIndexStack, stepIndex]);
+            setDirection('in');
+        },
+        [stepIndexStack],
+    );
+
+    const stepIndexStackPop = useCallback(() => {
+        if (stepIndexStack.length === 0) {
+            return;
+        }
+        setStepIndexStack(stepIndexStack.slice(0, -1));
+        setDirection('out');
+    }, [stepIndexStack]);
+
     const [selectedOptions, setSelectedOptions] = useState(
         ReportUtils.isPolicyExpenseChat(props.report)
             ? OptionsListUtils.getPolicyExpenseReportOptions(props.report)
@@ -134,30 +155,6 @@ function MoneyRequestModal(props) {
      * our step index.
      * @returns {String|null}
      */
-    const direction = useMemo(() => {
-        // If we're going to the "amount" step from the "confirm" step, push it in and pop it out like we're moving
-        // forward instead of backwards.
-        const amountIndex = _.indexOf(steps, Steps.MoneyRequestAmount);
-        const confirmIndex = _.indexOf(steps, Steps.MoneyRequestConfirm);
-        if (previousStepIndex === confirmIndex && currentStepIndex === amountIndex) {
-            return 'in';
-        }
-        if (previousStepIndex === amountIndex && currentStepIndex === confirmIndex) {
-            return 'out';
-        }
-
-        if (previousStepIndex < currentStepIndex) {
-            return 'in';
-        }
-        if (previousStepIndex > currentStepIndex) {
-            return 'out';
-        }
-
-        // Doesn't animate the step when first opening the modal
-        if (previousStepIndex === currentStepIndex) {
-            return null;
-        }
-    }, [previousStepIndex, currentStepIndex, steps]);
 
     /**
      * Retrieve title for current step, based upon current step and type of request
@@ -165,9 +162,9 @@ function MoneyRequestModal(props) {
      * @returns {String}
      */
     const titleForStep = useMemo(() => {
-        if (currentStepIndex === 0) {
+        if (getCurrentStepIndex() === 0) {
             const confirmIndex = _.indexOf(steps, Steps.MoneyRequestConfirm);
-            if (previousStepIndex === confirmIndex) {
+            if (getPreviousStepIndex() === confirmIndex) {
                 return props.translate('iou.amount');
             }
             if (props.iouType === CONST.IOU.MONEY_REQUEST_TYPE.SEND) {
@@ -177,7 +174,7 @@ function MoneyRequestModal(props) {
         }
         return props.translate('iou.cash');
         // eslint-disable-next-line react-hooks/exhaustive-deps -- props does not need to be a dependency as it will always exist
-    }, [currentStepIndex, props.translate, steps]);
+    }, [getCurrentStepIndex, props.translate, steps]);
 
     /**
      * Navigate to a provided step.
@@ -191,51 +188,37 @@ function MoneyRequestModal(props) {
                 return;
             }
 
-            if (currentStepIndex === stepIndex) {
+            if (getCurrentStepIndex() === stepIndex) {
                 return;
             }
 
-            setPreviousStepIndex(currentStepIndex);
-            setCurrentStepIndex(stepIndex);
+            stepIndexStackPush(stepIndex);
         },
-        [currentStepIndex, steps.length],
+        [getCurrentStepIndex, stepIndexStackPush, steps.length],
     );
 
     /**
      * Navigate to the previous request step if possible
      */
     const navigateToPreviousStep = useCallback(() => {
-        if (currentStepIndex === 0) {
+        if (getPreviousStepIndex() === -1) {
             Navigation.dismissModal();
             return;
         }
 
-        if (currentStepIndex <= 0 && previousStepIndex < 0) {
-            return;
-        }
-
-        setPreviousStepIndex(currentStepIndex);
-        setCurrentStepIndex(currentStepIndex - 1);
-    }, [currentStepIndex, previousStepIndex]);
+        stepIndexStackPop();
+    }, [getPreviousStepIndex, stepIndexStackPop]);
 
     /**
      * Navigate to the next request step if possible
      */
     const navigateToNextStep = useCallback(() => {
-        if (currentStepIndex >= steps.length - 1) {
+        if (getCurrentStepIndex() >= steps.length - 1) {
             return;
         }
 
-        // If we're coming from the confirm step, it means we were editing something so go back to the confirm step.
-        const confirmIndex = _.indexOf(steps, Steps.MoneyRequestConfirm);
-        if (previousStepIndex === confirmIndex) {
-            navigateToStep(confirmIndex);
-            return;
-        }
-
-        setPreviousStepIndex(currentStepIndex);
-        setCurrentStepIndex(currentStepIndex + 1);
-    }, [currentStepIndex, previousStepIndex, navigateToStep, steps]);
+        stepIndexStackPush(getCurrentStepIndex() + 1);
+    }, [getCurrentStepIndex, steps, stepIndexStackPush]);
 
     /**
      * Checks if user has a GOLD wallet then creates a paid IOU report on the fly
@@ -323,15 +306,14 @@ function MoneyRequestModal(props) {
         ],
     );
 
-    const currentStep = steps[currentStepIndex];
-    const moneyRequestStepIndex = _.indexOf(steps, Steps.MoneyRequestConfirm);
-    const isEditingAmountAfterConfirm = currentStepIndex === 0 && previousStepIndex === _.indexOf(steps, Steps.MoneyRequestConfirm);
-    const navigateBack = isEditingAmountAfterConfirm ? () => navigateToStep(moneyRequestStepIndex) : navigateToPreviousStep;
+    const currentStep = steps[getCurrentStepIndex()];
+
+    const isEditingAmountAfterConfirm = getCurrentStepIndex() === 0 && getPreviousStepIndex() !== -1;
     const reportID = lodashGet(props, 'route.params.reportID', '');
     const modalHeader = (
         <HeaderWithBackButton
             title={titleForStep}
-            onBackButtonPress={navigateBack}
+            onBackButtonPress={navigateToPreviousStep}
         />
     );
     const amountButtonText = isEditingAmountAfterConfirm ? props.translate('common.save') : props.translate('common.next');
@@ -360,7 +342,11 @@ function MoneyRequestModal(props) {
                                                 const amountInSmallestCurrencyUnits = CurrencyUtils.convertToSmallestUnit(selectedCurrencyCode, Number.parseFloat(value));
                                                 IOU.setIOUSelectedCurrency(selectedCurrencyCode);
                                                 setAmount(amountInSmallestCurrencyUnits);
-                                                navigateToNextStep();
+                                                if (isEditingAmountAfterConfirm) {
+                                                    navigateToPreviousStep();
+                                                } else {
+                                                    navigateToNextStep();
+                                                }
                                             }}
                                             reportID={reportID}
                                             hasMultipleParticipants={props.hasMultipleParticipants}

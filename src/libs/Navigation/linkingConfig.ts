@@ -1,15 +1,41 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {LinkingOptions} from '@react-navigation/native';
+import {getStateFromPath, LinkingOptions} from '@react-navigation/native';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
 import ROUTES from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
+import getMatchingTabNameForState from './getMatchingTabNameForState';
 import {RootStackParamList} from './types';
 
+function addTabToState(state, tabName) {
+    // If target tab is HOME it will be handled by linkingConfig and initialRouteName by default.
+    if (tabName === SCREENS.HOME) {
+        return state;
+    }
+
+    const stateWithInsertedTab = {...state};
+
+    stateWithInsertedTab.routes.at(0).state = {
+        // We need to add HOME because initialRouteName won't work for modified state.
+        // And we need HOME screen to be mounted load app correctly.
+        routes: [{name: SCREENS.HOME}, {name: tabName}],
+    };
+
+    return stateWithInsertedTab;
+}
+
 const linkingConfig: LinkingOptions<RootStackParamList> = {
+    getStateFromPath: (path, options) => {
+        const state = getStateFromPath(path, options);
+
+        // We need to set propert tab for the BottomTabNavigator if we deeplink to a screen in CentralPaneNavigator.
+        const stateWithProperTab = addTabToState(state, getMatchingTabNameForState(state));
+
+        return stateWithProperTab;
+    },
     prefixes: ['new-expensify://', 'https://www.expensify.cash', 'https://staging.expensify.cash', 'https://dev.new.expensify.com', CONST.NEW_EXPENSIFY_URL, CONST.STAGING_NEW_EXPENSIFY_URL],
     config: {
-        initialRouteName: SCREENS.HOME,
+        initialRouteName: NAVIGATORS.BOTTOM_TAB_NAVIGATOR,
         screens: {
             // Main Routes
             [SCREENS.VALIDATE_LOGIN]: ROUTES.VALIDATE_LOGIN,
@@ -26,13 +52,21 @@ const linkingConfig: LinkingOptions<RootStackParamList> = {
             [CONST.DEMO_PAGES.MONEY2020]: ROUTES.MONEY2020,
 
             // Sidebar
-            [SCREENS.HOME]: {
-                path: ROUTES.HOME,
+            [NAVIGATORS.BOTTOM_TAB_NAVIGATOR]: {
+                path: '',
+                initialRouteName: SCREENS.HOME,
+                screens: {
+                    [SCREENS.HOME]: ROUTES.HOME,
+                    [SCREENS.SETTINGS_IDEAL]: ROUTES.SETTINGS_IDEAL,
+                    [SCREENS.WORKSPACE_SETTINGS_IDEAL]: ROUTES.WORKSPACE_SETTINGS_IDEAL,
+                },
             },
 
             [NAVIGATORS.CENTRAL_PANE_NAVIGATOR]: {
                 screens: {
                     [SCREENS.REPORT]: ROUTES.REPORT_WITH_ID.route,
+                    [SCREENS.WORKSPACES_IDEAL]: ROUTES.WORKSPACES_IDEAL,
+                    [SCREENS.OVERVIEW_IDEAL]: ROUTES.OVERVIEW_IDEAL,
                 },
             },
             [SCREENS.NOT_FOUND]: '*',

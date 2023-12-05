@@ -4,7 +4,11 @@ import {Writable} from 'type-fest';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
 import {Route} from '@src/ROUTES';
+import SCREENS from '@src/SCREENS';
+import getMatchingTabNameForState from './getMatchingTabNameForState';
 import getStateFromPath from './getStateFromPath';
+import getTabName from './getTabName';
+import getTopmostCentralPaneName from './getTopmostCentralPaneName';
 import getTopmostReportId from './getTopmostReportId';
 import linkingConfig from './linkingConfig';
 import {NavigationRoot, RootStackParamList, StackNavigationAction} from './types';
@@ -80,7 +84,19 @@ export default function linkTo(navigation: NavigationContainerRef<RootStackParam
             action.type = CONST.NAVIGATION.ACTION_TYPE.REPLACE;
 
             // If this action is navigating to the report screen and the top most navigator is different from the one we want to navigate - PUSH the new screen to the top of the stack
-        } else if (action.payload.name === NAVIGATORS.CENTRAL_PANE_NAVIGATOR && getTopmostReportId(rootState) !== getTopmostReportId(state)) {
+        } else if (
+            action.payload.name === NAVIGATORS.CENTRAL_PANE_NAVIGATOR &&
+            (getTopmostCentralPaneName(rootState) !== SCREENS.REPORT || getTopmostReportId(rootState) !== getTopmostReportId(state))
+        ) {
+            // We need to push a tab if the tab should be different after navigation action.
+            const currentTabName = getTabName(rootState);
+            if (currentTabName !== getMatchingTabNameForState(state)) {
+                root.dispatch({
+                    type: CONST.NAVIGATION.ACTION_TYPE.PUSH,
+                    payload: {name: getMatchingTabNameForState(state)},
+                });
+            }
+
             action.type = CONST.NAVIGATION.ACTION_TYPE.PUSH;
 
             // If the type is UP, we deeplinked into one of the RHP flows and we want to replace the current screen with the previous one in the flow

@@ -7,6 +7,7 @@ import NAVIGATORS from '@src/NAVIGATORS';
 import ROUTES, {Route} from '@src/ROUTES';
 import SCREENS, {PROTECTED_SCREENS} from '@src/SCREENS';
 import getStateFromPath from './getStateFromPath';
+import originalGetTabName from './getTabName';
 import originalGetTopmostReportActionId from './getTopmostReportActionID';
 import originalGetTopmostReportId from './getTopmostReportId';
 import linkingConfig from './linkingConfig';
@@ -43,6 +44,8 @@ const getTopmostReportId = (state = navigationRef.getState()) => originalGetTopm
 
 // Re-exporting the getTopmostReportActionID here to fill in default value for state. The getTopmostReportActionID isn't defined in this file to avoid cyclic dependencies.
 const getTopmostReportActionId = (state = navigationRef.getState()) => originalGetTopmostReportActionId(state);
+
+const getTabName = (state = navigationRef.getState()) => originalGetTabName(state);
 
 /** Method for finding on which index in stack we are. */
 function getActiveRouteIndex(stateOrRoute: StateOrRoute, index?: number): number | undefined {
@@ -334,6 +337,7 @@ export default {
     isActiveRoute,
     getActiveRoute,
     getActiveRouteWithoutParams,
+    getTabName,
     goBack,
     isNavigationReady,
     setIsNavigationReady,

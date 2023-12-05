@@ -13,6 +13,15 @@ function getUrlWithBackToParam<TUrl extends string>(url: TUrl, backTo?: string):
 
 const ROUTES = {
     HOME: '',
+
+    // Tab screens
+    SETTINGS_IDEAL: 'settings-ideal',
+    WORKSPACE_SETTINGS_IDEAL: 'workspace-settings-ideal',
+
+    // Central pane screen
+    WORKSPACES_IDEAL: 'workspaces-ideal',
+    OVERVIEW_IDEAL: 'overview-ideal',
+
     /** This is a utility route used to go to the user's concierge chat, or the sign-in page if the user's not authenticated */
     CONCIERGE: 'concierge',
     FLAG_COMMENT: {

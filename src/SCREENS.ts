@@ -11,6 +11,14 @@ const PROTECTED_SCREENS = {
 
 const SCREENS = {
     ...PROTECTED_SCREENS,
+    // Tab screens
+    SETTINGS_IDEAL: 'SettingsIdeal',
+    WORKSPACE_SETTINGS_IDEAL: 'WorkspaceSettingsIdeal',
+
+    // Central pane screen
+    WORKSPACES_IDEAL: 'WorkspacesIdeal',
+    OVERVIEW_IDEAL: 'OverviewIdeal',
+
     REPORT: 'Report',
     NOT_FOUND: 'not-found',
     TRANSITION_BETWEEN_APPS: 'TransitionBetweenApps',

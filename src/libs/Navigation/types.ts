@@ -33,12 +33,20 @@ type NavigationStateRoute = NavigationState['routes'][number];
 type NavigationPartialRoute = PartialRoute<Route<string>>;
 type StateOrRoute = NavigationState | NavigationStateRoute | NavigationPartialRoute;
 
+// TODO-IDEAL: Better type for this
+type BottomTabName = keyof typeof CONST.TAB_TO_CENTRAL_PANE_MAPPING;
+
+// TODO-IDEAL: Better type for this
+type CentralPaneName = typeof SCREENS.REPORT | typeof SCREENS.WORKSPACES_IDEAL | typeof SCREENS.OVERVIEW_IDEAL;
+
 type CentralPaneNavigatorParamList = {
     [SCREENS.REPORT]: {
         reportActionID: string;
         reportID: string;
         openOnAdminRoom?: boolean;
     };
+    [SCREENS.WORKSPACES_IDEAL]: undefined;
+    [SCREENS.OVERVIEW_IDEAL]: undefined;
 };
 
 type SettingsNavigatorParamList = {
@@ -359,8 +367,14 @@ type RightModalNavigatorParamList = {
     [SCREENS.RIGHT_MODAL.PRIVATE_NOTES]: NavigatorScreenParams<PrivateNotesNavigatorParamList>;
 };
 
-type PublicScreensParamList = {
+type BottomTabNavigatorParamList = {
     [SCREENS.HOME]: undefined;
+    [SCREENS.SETTINGS_IDEAL]: undefined;
+    [SCREENS.WORKSPACE_SETTINGS_IDEAL]: undefined;
+};
+
+type PublicScreensParamList = {
+    [NAVIGATORS.BOTTOM_TAB_NAVIGATOR]: NavigatorScreenParams<BottomTabNavigatorParamList>;
     [SCREENS.TRANSITION_BETWEEN_APPS]: {
         shouldForceLogin: string;
         email: string;
@@ -381,7 +395,7 @@ type PublicScreensParamList = {
 };
 
 type AuthScreensParamList = {
-    [SCREENS.HOME]: undefined;
+    [NAVIGATORS.BOTTOM_TAB_NAVIGATOR]: NavigatorScreenParams<BottomTabNavigatorParamList>;
     [NAVIGATORS.CENTRAL_PANE_NAVIGATOR]: NavigatorScreenParams<CentralPaneNavigatorParamList>;
     [SCREENS.VALIDATE_LOGIN]: {
         accountID: string;
@@ -416,11 +430,14 @@ export type {
     NavigationRef,
     StackNavigationAction,
     CentralPaneNavigatorParamList,
+    BottomTabName,
+    CentralPaneName,
     RootStackParamList,
     StateOrRoute,
     NavigationStateRoute,
     NavigationRoot,
     AuthScreensParamList,
+    BottomTabNavigatorParamList,
     RightModalNavigatorParamList,
     PublicScreensParamList,
     MoneyRequestNavigatorParamList,

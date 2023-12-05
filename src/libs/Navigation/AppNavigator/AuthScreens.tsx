@@ -33,6 +33,7 @@ import type {SelectedTimezone, Timezone} from '@src/types/onyx/PersonalDetails';
 import createCustomStackNavigator from './createCustomStackNavigator';
 import defaultScreenOptions from './defaultScreenOptions';
 import getRootNavigatorScreenOptions from './getRootNavigatorScreenOptions';
+import BottomTabNavigator from './Navigators/BottomTabNavigator';
 import CentralPaneNavigator from './Navigators/CentralPaneNavigator';
 import RightModalNavigator from './Navigators/RightModalNavigator';
 
@@ -54,7 +55,6 @@ type AuthScreensProps = {
 };
 
 const loadReportAttachments = () => require('../../../pages/home/report/ReportAttachments').default as React.ComponentType;
-const loadSidebarScreen = () => require('../../../pages/home/sidebar/SidebarScreen').default as React.ComponentType;
 const loadValidateLoginPage = () => require('../../../pages/ValidateLoginPage').default as React.ComponentType;
 const loadLogOutPreviousUserPage = () => require('../../../pages/LogOutPreviousUserPage').default as React.ComponentType;
 const loadConciergePage = () => require('../../../pages/ConciergePage').default as React.ComponentType;
@@ -254,9 +254,9 @@ function AuthScreens({lastUpdateIDAppliedToClient, session, lastOpenedPublicRoom
                 screenOptions={{keyboardHandlingEnabled: false, presentation: 'modal'}}
             >
                 <RootStack.Screen
-                    name={SCREENS.HOME}
+                    name={NAVIGATORS.BOTTOM_TAB_NAVIGATOR}
                     options={screenOptions.homeScreen}
-                    getComponent={loadSidebarScreen}
+                    component={BottomTabNavigator}
                 />
                 <RootStack.Screen
                     name={NAVIGATORS.CENTRAL_PANE_NAVIGATOR}

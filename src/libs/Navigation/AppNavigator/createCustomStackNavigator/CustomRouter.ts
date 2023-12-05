@@ -1,5 +1,7 @@
 import {NavigationState, PartialState, RouterConfigOptions, StackNavigationState, StackRouter} from '@react-navigation/native';
 import {ParamListBase} from '@react-navigation/routers';
+import getMatchingCentralPaneNameForState from '@libs/Navigation/getMatchingCentralPaneNameForState';
+import getTabName from '@libs/Navigation/getTabName';
 import NAVIGATORS from '@src/NAVIGATORS';
 import SCREENS from '@src/SCREENS';
 import type {ResponsiveStackNavigatorRouterOptions} from './types';
@@ -44,20 +46,36 @@ const getTopMostReportIDFromRHP = (state: State): string => {
  * @param state - react-navigation state
  */
 const addCentralPaneNavigatorRoute = (state: State) => {
-    const reportID = getTopMostReportIDFromRHP(state);
-    const centralPaneNavigatorRoute = {
-        name: NAVIGATORS.CENTRAL_PANE_NAVIGATOR,
-        state: {
-            routes: [
-                {
-                    name: SCREENS.REPORT,
-                    params: {
-                        reportID,
+    const currentTabName = getTabName(state);
+    let centralPaneNavigatorRoute;
+
+    if (currentTabName === SCREENS.HOME) {
+        const reportID = getTopMostReportIDFromRHP(state);
+        centralPaneNavigatorRoute = {
+            name: NAVIGATORS.CENTRAL_PANE_NAVIGATOR,
+            state: {
+                routes: [
+                    {
+                        name: SCREENS.REPORT,
+                        params: {
+                            reportID,
+                        },
                     },
-                },
-            ],
-        },
-    };
+                ],
+            },
+        };
+    } else {
+        centralPaneNavigatorRoute = {
+            name: NAVIGATORS.CENTRAL_PANE_NAVIGATOR,
+            state: {
+                routes: [
+                    {
+                        name: getMatchingCentralPaneNameForState(state),
+                    },
+                ],
+            },
+        };
+    }
     state.routes.splice(1, 0, centralPaneNavigatorRoute);
     // @ts-expect-error Updating read only property
     // noinspection JSConstantReassignment

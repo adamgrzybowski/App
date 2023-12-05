@@ -435,6 +435,7 @@ export type {
     RootStackParamList,
     StateOrRoute,
     NavigationStateRoute,
+    NavigationPartialRoute,
     NavigationRoot,
     AuthScreensParamList,
     BottomTabNavigatorParamList,

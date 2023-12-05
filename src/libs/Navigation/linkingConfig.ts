@@ -1,37 +1,47 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {getStateFromPath, LinkingOptions} from '@react-navigation/native';
+import {getStateFromPath, LinkingOptions, NavigationState, PartialState} from '@react-navigation/native';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
 import ROUTES from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
 import getMatchingTabNameForState from './getMatchingTabNameForState';
-import {RootStackParamList} from './types';
+import {NavigationPartialRoute, RootStackParamList} from './types';
 
-function addTabToState(state, tabName) {
-    // If target tab is HOME it will be handled by linkingConfig and initialRouteName by default.
-    if (tabName === SCREENS.HOME) {
+function getStateWithProperTab(state: PartialState<NavigationState>) {
+    // If the bottom tab navigator state is defined we don't need to do anything.
+    const isBottomTabNavigatorStateDefined = state.routes.at(0)?.state !== undefined;
+    if (isBottomTabNavigatorStateDefined) {
         return state;
     }
 
-    const stateWithInsertedTab = {...state};
+    // If not, we need to insert the tab that matches the currently generated state.
+    const tabName = getMatchingTabNameForState(state);
 
-    stateWithInsertedTab.routes.at(0).state = {
-        // We need to add HOME because initialRouteName won't work for modified state.
-        // And we need HOME screen to be mounted load app correctly.
-        routes: [{name: SCREENS.HOME}, {name: tabName}],
-    };
+    // We need to have at least one HOME route in the state, otherwise the app won't load.
+    const routesForBottomTabNavigator: NavigationPartialRoute[] = [{name: SCREENS.HOME}];
 
-    return stateWithInsertedTab;
+    if (tabName !== SCREENS.HOME) {
+        // If the generated state requires tab other than HOME, we need to insert it.
+        routesForBottomTabNavigator.push({name: tabName});
+    }
+
+    const stateWithTab = {...state};
+
+    // The first route in root stack is always the BOTTOM_TAB_NAVIGATOR
+    stateWithTab.routes[0] = {name: NAVIGATORS.BOTTOM_TAB_NAVIGATOR, state: {routes: routesForBottomTabNavigator}};
+
+    return stateWithTab;
 }
 
 const linkingConfig: LinkingOptions<RootStackParamList> = {
     getStateFromPath: (path, options) => {
         const state = getStateFromPath(path, options);
 
-        // We need to set propert tab for the BottomTabNavigator if we deeplink to a screen in CentralPaneNavigator.
-        const stateWithProperTab = addTabToState(state, getMatchingTabNameForState(state));
-
-        return stateWithProperTab;
+        if (state === undefined) {
+            throw new Error('Unable to parse path');
+        }
+        const stateWithTab = getStateWithProperTab(state);
+        return stateWithTab;
     },
     prefixes: ['new-expensify://', 'https://www.expensify.cash', 'https://staging.expensify.cash', 'https://dev.new.expensify.com', CONST.NEW_EXPENSIFY_URL, CONST.STAGING_NEW_EXPENSIFY_URL],
     config: {
@@ -77,10 +87,6 @@ const linkingConfig: LinkingOptions<RootStackParamList> = {
                         screens: {
                             [SCREENS.SETTINGS.ROOT]: {
                                 path: ROUTES.SETTINGS,
-                            },
-                            [SCREENS.SETTINGS.WORKSPACES]: {
-                                path: ROUTES.SETTINGS_WORKSPACES,
-                                exact: true,
                             },
                             [SCREENS.SETTINGS.PREFERENCES]: {
                                 path: ROUTES.SETTINGS_PREFERENCES,

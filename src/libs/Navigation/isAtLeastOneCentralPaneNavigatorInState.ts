@@ -1,7 +1,5 @@
-import {NavigationState, PartialState} from '@react-navigation/native';
 import NAVIGATORS from '@src/NAVIGATORS';
-
-type State = NavigationState | PartialState<NavigationState>;
+import {State} from './types';
 
 /**
  * @param state - react-navigation state

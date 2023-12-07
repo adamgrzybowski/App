@@ -1,9 +1,8 @@
-import {NavigationState, PartialState} from '@react-navigation/native';
 import NAVIGATORS from '@src/NAVIGATORS';
-import {CentralPaneName} from './types';
+import {CentralPaneName, State} from './types';
 
 // Get the name of topmost report in the navigation stack.
-function getTopmostCentralPaneName(state: NavigationState | PartialState<NavigationState>): CentralPaneName | undefined {
+function getTopmostCentralPaneName(state: State): CentralPaneName | undefined {
     if (!state) {
         return;
     }

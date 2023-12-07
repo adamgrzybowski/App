@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention  */
-import {CommonActions, NavigationContainerRefWithCurrent, NavigationHelpers, NavigationState, NavigatorScreenParams, PartialRoute, Route} from '@react-navigation/native';
+import {CommonActions, NavigationContainerRefWithCurrent, NavigationHelpers, NavigationState, NavigatorScreenParams, PartialRoute, PartialState, Route} from '@react-navigation/native';
 import {ValueOf} from 'type-fest';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
@@ -427,6 +427,8 @@ type AuthScreensParamList = {
 
 type RootStackParamList = PublicScreensParamList & AuthScreensParamList;
 
+type State = NavigationState | PartialState<NavigationState>;
+
 export type {
     NavigationRef,
     StackNavigationAction,
@@ -467,4 +469,5 @@ export type {
     SignInNavigatorParamList,
     ReferralDetailsNavigatorParamList,
     ReimbursementAccountNavigatorParamList,
+    State,
 };

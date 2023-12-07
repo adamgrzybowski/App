@@ -1,13 +1,12 @@
-import {NavigationState, PartialState, RouterConfigOptions, StackNavigationState, StackRouter} from '@react-navigation/native';
+import {RouterConfigOptions, StackNavigationState, StackRouter} from '@react-navigation/native';
 import {ParamListBase} from '@react-navigation/routers';
 import getMatchingCentralPaneNameForState from '@libs/Navigation/getMatchingCentralPaneNameForState';
 import getTabName from '@libs/Navigation/getTabName';
 import isAtLeastOneCentralPaneNavigatorInState from '@libs/Navigation/isAtLeastOneCentralPaneNavigatorInState';
+import {State} from '@libs/Navigation/types';
 import NAVIGATORS from '@src/NAVIGATORS';
 import SCREENS from '@src/SCREENS';
 import type {ResponsiveStackNavigatorRouterOptions} from './types';
-
-type State = NavigationState | PartialState<NavigationState>;
 
 /**
  * @param state - react-navigation state

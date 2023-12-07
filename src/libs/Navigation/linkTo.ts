@@ -1,5 +1,5 @@
 import {getActionFromState} from '@react-navigation/core';
-import {NavigationAction, NavigationContainerRef, NavigationState, PartialState} from '@react-navigation/native';
+import {NavigationAction, NavigationContainerRef, NavigationState} from '@react-navigation/native';
 import {Writable} from 'type-fest';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
@@ -11,7 +11,7 @@ import getTabName from './getTabName';
 import getTopmostCentralPaneName from './getTopmostCentralPaneName';
 import getTopmostReportId from './getTopmostReportId';
 import linkingConfig from './linkingConfig';
-import {NavigationRoot, RootStackParamList, StackNavigationAction} from './types';
+import {NavigationRoot, RootStackParamList, StackNavigationAction, State} from './types';
 
 type ActionPayloadParams = {
     screen?: string;
@@ -32,7 +32,7 @@ type ActionPayload = {
  */
 function getMinimalAction(action: NavigationAction, state: NavigationState): Writable<NavigationAction> {
     let currentAction: NavigationAction = action;
-    let currentState: NavigationState | PartialState<NavigationState> | undefined = state;
+    let currentState: State | undefined = state;
     let currentTargetKey: string | undefined;
 
     while (currentAction.payload && 'name' in currentAction.payload && currentState?.routes[currentState.index ?? -1].name === currentAction.payload.name) {

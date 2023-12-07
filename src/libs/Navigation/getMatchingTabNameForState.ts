@@ -1,10 +1,9 @@
-import {NavigationState, PartialState} from '@react-navigation/native';
 import CONST from '@src/CONST';
 import SCREENS from '@src/SCREENS';
 import getTopmostCentralPaneName from './getTopmostCentralPaneName';
-import {BottomTabName, CentralPaneName} from './types';
+import {BottomTabName, CentralPaneName, State} from './types';
 
-function getMatchingTabNameForState(state: NavigationState | PartialState<NavigationState>): BottomTabName {
+function getMatchingTabNameForState(state: State): BottomTabName {
     const currentTopCentralPaneName = getTopmostCentralPaneName(state);
 
     if (currentTopCentralPaneName === undefined) {

@@ -1,7 +1,6 @@
-import {NavigationState, PartialState} from '@react-navigation/native';
-import {BottomTabName} from './types';
+import {BottomTabName, State} from './types';
 
-function getTabName(state: NavigationState | PartialState<NavigationState>): BottomTabName {
+function getTabName(state: State): BottomTabName {
     // TODO-IDEAL better type safety
     const tabName = state.routes[0]?.state?.routes?.at(-1)?.name as BottomTabName;
 

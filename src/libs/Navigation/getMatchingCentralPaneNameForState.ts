@@ -1,9 +1,8 @@
-import {NavigationState, PartialState} from '@react-navigation/native';
 import CONST from '@src/CONST';
 import getTabName from './getTabName';
-import {CentralPaneName} from './types';
+import {CentralPaneName, State} from './types';
 
-function getMatchingCentralPaneNameForState(state: NavigationState | PartialState<NavigationState>): CentralPaneName {
+function getMatchingCentralPaneNameForState(state: State): CentralPaneName {
     const currentTabName = getTabName(state);
 
     return CONST.TAB_TO_CENTRAL_PANE_MAPPING[currentTabName][0];

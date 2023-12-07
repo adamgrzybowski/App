@@ -7,7 +7,7 @@ import * as Expensicons from '@components/Icon/Expensicons';
 import {PressableWithFeedback} from '@components/Pressable';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import Navigation from '@libs/Navigation/Navigation';
-import FloatingActionButtonAndPopover from '@pages/home/sidebar/SidebarScreen/FloatingActionButtonAndPopover';
+import BottomTabBarFloatingActionButton from '@pages/home/sidebar/BottomTabBarFloatingActionButton';
 import styles from '@styles/styles';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
@@ -39,7 +39,7 @@ function BottomTabBar({navigation}: BottomTabBarProps) {
                     fill={currentTabName === SCREENS.HOME ? 'white' : undefined}
                 />
             </PressableWithFeedback>
-            <FloatingActionButtonAndPopover />
+            <BottomTabBarFloatingActionButton />
             <PressableWithFeedback
                 onPress={() => {
                     navigation.push(SCREENS.SETTINGS_IDEAL);

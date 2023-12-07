@@ -1,5 +1,14 @@
-import {createNavigatorFactory, NavigationState, PartialState, StackRouter, useNavigationBuilder} from '@react-navigation/native';
-import {StackView} from '@react-navigation/stack';
+import {
+    createNavigatorFactory,
+    DefaultNavigatorOptions,
+    ParamListBase,
+    StackActionHelpers,
+    StackNavigationState,
+    StackRouter,
+    StackRouterOptions,
+    useNavigationBuilder,
+} from '@react-navigation/native';
+import {StackNavigationEventMap, StackNavigationOptions, StackView} from '@react-navigation/stack';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {View} from 'react-native';
@@ -7,12 +16,16 @@ import {NavigationStateRoute} from '@libs/Navigation/types';
 import SCREENS from '@src/SCREENS';
 import BottomTabBar from './BottomTabBar';
 
+type CustomNavigatorProps = DefaultNavigatorOptions<ParamListBase, StackNavigationState<ParamListBase>, StackNavigationOptions, StackNavigationEventMap> & {
+    initialRouteName: string;
+};
+
 const propTypes = {
     /* Children for the useNavigationBuilder hook */
     children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
 
     /* initialRouteName for this navigator */
-    initialRouteName: PropTypes.oneOf([PropTypes.string, PropTypes.undefined]),
+    initialRouteName: PropTypes.oneOf([PropTypes.string, undefined]),
 
     /* Screen options defined for this navigator */
     // eslint-disable-next-line react/forbid-prop-types
@@ -24,21 +37,30 @@ const defaultProps = {
     screenOptions: undefined,
 };
 
-function getStateToRender(state: NavigationState | PartialState<NavigationState>): NavigationState | PartialState<NavigationState> {
+function getStateToRender(state: StackNavigationState<ParamListBase>): StackNavigationState<ParamListBase> {
     const routesToRender = [state.routes.at(-1)] as NavigationStateRoute[];
     // We need to render at least one HOME screen to make sure everything load properly.
     if (routesToRender[0].name !== SCREENS.HOME) {
-        routesToRender.unshift(state.routes.find((route) => route.name === SCREENS.HOME) as NavigationStateRoute);
+        const routeToRender = state.routes.find((route) => route.name === SCREENS.HOME);
+        if (routeToRender) {
+            routesToRender.unshift(routeToRender);
+        }
     }
 
     return {...state, routes: routesToRender, index: routesToRender.length - 1};
 }
 
-function CustomBottomTabNavigator(props) {
-    const {navigation, state, descriptors, NavigationContent} = useNavigationBuilder(StackRouter, {
-        children: props.children,
-        screenOptions: props.screenOptions,
-        initialRouteName: props.initialRouteName,
+function CustomBottomTabNavigator({initialRouteName, children, screenOptions, ...props}: CustomNavigatorProps) {
+    const {state, navigation, descriptors, NavigationContent} = useNavigationBuilder<
+        StackNavigationState<ParamListBase>,
+        StackRouterOptions,
+        StackActionHelpers<ParamListBase>,
+        StackNavigationOptions,
+        StackNavigationEventMap
+    >(StackRouter, {
+        children,
+        screenOptions,
+        initialRouteName,
     });
 
     const stateToRender = getStateToRender(state);
@@ -54,10 +76,7 @@ function CustomBottomTabNavigator(props) {
                     navigation={navigation}
                 />
             </NavigationContent>
-            <BottomTabBar
-                state={state}
-                navigation={navigation}
-            />
+            <BottomTabBar navigation={navigation} />
         </View>
     );
 }

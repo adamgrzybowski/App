@@ -2,16 +2,12 @@ import {NavigationState, PartialState, RouterConfigOptions, StackNavigationState
 import {ParamListBase} from '@react-navigation/routers';
 import getMatchingCentralPaneNameForState from '@libs/Navigation/getMatchingCentralPaneNameForState';
 import getTabName from '@libs/Navigation/getTabName';
+import isAtLeastOneCentralPaneNavigatorInState from '@libs/Navigation/isAtLeastOneCentralPaneNavigatorInState';
 import NAVIGATORS from '@src/NAVIGATORS';
 import SCREENS from '@src/SCREENS';
 import type {ResponsiveStackNavigatorRouterOptions} from './types';
 
 type State = NavigationState | PartialState<NavigationState>;
-
-/**
- * @param state - react-navigation state
- */
-const isAtLeastOneCentralPaneNavigatorInState = (state: State): boolean => !!state.routes.find((route) => route.name === NAVIGATORS.CENTRAL_PANE_NAVIGATOR);
 
 /**
  * @param state - react-navigation state

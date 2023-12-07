@@ -374,6 +374,7 @@ type BottomTabNavigatorParamList = {
 };
 
 type PublicScreensParamList = {
+    [SCREENS.HOME]: undefined;
     [NAVIGATORS.BOTTOM_TAB_NAVIGATOR]: NavigatorScreenParams<BottomTabNavigatorParamList>;
     [SCREENS.TRANSITION_BETWEEN_APPS]: {
         shouldForceLogin: string;

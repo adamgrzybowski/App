@@ -1,5 +1,5 @@
 import {useNavigationState} from '@react-navigation/native';
-import PropTypes from 'prop-types';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React from 'react';
 import {View} from 'react-native';
 import Icon from '@components/Icon';
@@ -13,7 +13,11 @@ import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
 
-function BottomTabBar({navigation}) {
+type BottomTabBarProps = {
+    navigation: StackNavigationHelpers;
+};
+
+function BottomTabBar({navigation}: BottomTabBarProps) {
     const {isSmallScreenWidth} = useWindowDimensions();
 
     const currentTabName = useNavigationState((state) => Navigation.getTabName(state));
@@ -24,7 +28,7 @@ function BottomTabBar({navigation}) {
                 onPress={() => {
                     navigation.push(SCREENS.HOME);
                     if (!isSmallScreenWidth) {
-                        Navigation.navigate('/r');
+                        Navigation.navigate(ROUTES.REPORT);
                     }
                 }}
                 role={CONST.ACCESSIBILITY_ROLE.BUTTON}

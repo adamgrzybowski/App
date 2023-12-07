@@ -1,9 +1,11 @@
-import _ from 'lodash';
+import {NavigationState, PartialState} from '@react-navigation/native';
 import NAVIGATORS from '@src/NAVIGATORS';
+
+type State = NavigationState | PartialState<NavigationState>;
 
 /**
  * @param state - react-navigation state
  */
-const isAtLeastOneCentralPaneNavigatorInState = (state) => _.find(state.routes, (r) => r.name === NAVIGATORS.CENTRAL_PANE_NAVIGATOR);
+const isAtLeastOneCentralPaneNavigatorInState = (state: State) => state.routes.some((r) => r.name === NAVIGATORS.CENTRAL_PANE_NAVIGATOR);
 
 export default isAtLeastOneCentralPaneNavigatorInState;

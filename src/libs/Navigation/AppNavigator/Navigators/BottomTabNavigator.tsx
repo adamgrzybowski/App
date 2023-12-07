@@ -1,23 +1,19 @@
-import PropTypes from 'prop-types';
+import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {Text, View} from 'react-native';
 import {PressableWithFeedback} from '@components/Pressable';
 import createCustomBottomTabNavigator from '@libs/Navigation/AppNavigator/createCustomBottomTabNavigator';
 import Navigation from '@libs/Navigation/Navigation';
-import {BottomTabNavigatorParamList} from '@libs/Navigation/types';
+import {AuthScreensParamList, BottomTabNavigatorParamList} from '@libs/Navigation/types';
 import SidebarScreen from '@pages/home/sidebar/SidebarScreen';
 import CONST from '@src/CONST';
+import NAVIGATORS from '@src/NAVIGATORS';
 import ROUTES from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
 
-const Tab = createCustomBottomTabNavigator<BottomTabNavigatorParamList>();
+type BottomTabNavigatorProps = StackScreenProps<AuthScreensParamList, typeof NAVIGATORS.BOTTOM_TAB_NAVIGATOR>;
 
-const propTypes = {
-    /* Navigation functions provided by React Navigation */
-    navigation: PropTypes.shape({
-        goBack: PropTypes.func.isRequired,
-    }).isRequired,
-};
+const Tab = createCustomBottomTabNavigator<BottomTabNavigatorParamList>();
 
 function SeconedTab() {
     return (
@@ -64,7 +60,6 @@ function BottomTabNavigator() {
     );
 }
 
-BottomTabNavigator.propTypes = propTypes;
 BottomTabNavigator.displayName = 'BottomTabNavigator';
 
 export default BottomTabNavigator;

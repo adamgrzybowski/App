@@ -69,6 +69,11 @@ const linkingConfig: LinkingOptions<RootStackParamList> = {
                     [SCREENS.HOME]: ROUTES.HOME,
                     [SCREENS.SETTINGS_IDEAL]: ROUTES.SETTINGS_IDEAL,
                     [SCREENS.WORKSPACE_SETTINGS_IDEAL]: ROUTES.WORKSPACE_SETTINGS_IDEAL,
+
+                    [SCREENS.WORKSPACE.INITIAL]: {
+                        path: ROUTES.WORKSPACE_INITIAL.route,
+                        exact: true,
+                    },
                 },
             },
 
@@ -77,6 +82,9 @@ const linkingConfig: LinkingOptions<RootStackParamList> = {
                     [SCREENS.REPORT]: ROUTES.REPORT_WITH_ID.route,
                     [SCREENS.WORKSPACES_IDEAL]: ROUTES.WORKSPACES_IDEAL,
                     [SCREENS.OVERVIEW_IDEAL]: ROUTES.OVERVIEW_IDEAL,
+
+                    [SCREENS.SETTINGS.WORKSPACES]: ROUTES.SETTINGS_WORKSPACES,
+                    [SCREENS.WORKSPACE.SETTINGS]: ROUTES.WORKSPACE_SETTINGS.route,
                 },
             },
             [SCREENS.NOT_FOUND]: '*',
@@ -250,12 +258,12 @@ const linkingConfig: LinkingOptions<RootStackParamList> = {
                                 path: ROUTES.SETTINGS_STATUS_SET,
                                 exact: true,
                             },
-                            Workspace_Initial: {
-                                path: ROUTES.WORKSPACE_INITIAL.route,
-                            },
-                            Workspace_Settings: {
-                                path: ROUTES.WORKSPACE_SETTINGS.route,
-                            },
+                            // Workspace_Initial: {
+                            //     path: ROUTES.WORKSPACE_INITIAL.route,
+                            // },
+                            // Workspace_Settings: {
+                            //     path: ROUTES.WORKSPACE_SETTINGS.route,
+                            // },
                             Workspace_Settings_Currency: {
                                 path: ROUTES.WORKSPACE_SETTINGS_CURRENCY.route,
                             },

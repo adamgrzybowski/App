@@ -34,6 +34,7 @@ function ResponsiveStackNavigator(props: ResponsiveStackNavigatorProps) {
     const isSmallScreenWidthRef = useRef<boolean>(isSmallScreenWidth);
 
     isSmallScreenWidthRef.current = isSmallScreenWidth;
+    const getIsSmallScreenWidth = () => isSmallScreenWidthRef.current;
 
     const {navigation, state, descriptors, NavigationContent} = useNavigationBuilder<
         StackNavigationState<ParamListBase>,
@@ -46,7 +47,7 @@ function ResponsiveStackNavigator(props: ResponsiveStackNavigatorProps) {
         screenOptions: props.screenOptions,
         initialRouteName: props.initialRouteName,
         // Options for useNavigationBuilder won't update on prop change, so we need to pass a getter for the router to have the current state of isSmallScreenWidth.
-        getIsSmallScreenWidth: () => isSmallScreenWidthRef.current,
+        getIsSmallScreenWidth,
     });
 
     useEffect(() => {

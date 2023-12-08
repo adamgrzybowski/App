@@ -38,6 +38,7 @@ type BottomTabName = keyof typeof CONST.TAB_TO_CENTRAL_PANE_MAPPING;
 
 // TODO-IDEAL: Better type for this
 type CentralPaneName = typeof SCREENS.REPORT | typeof SCREENS.WORKSPACES_IDEAL | typeof SCREENS.OVERVIEW_IDEAL;
+// type CentralPaneName = keyof CentralPaneNavigatorParamList;
 
 type CentralPaneNavigatorParamList = {
     [SCREENS.REPORT]: {
@@ -45,8 +46,10 @@ type CentralPaneNavigatorParamList = {
         reportID: string;
         openOnAdminRoom?: boolean;
     };
+    [SCREENS.SETTINGS.WORKSPACES]: undefined;
     [SCREENS.WORKSPACES_IDEAL]: undefined;
     [SCREENS.OVERVIEW_IDEAL]: undefined;
+    [SCREENS.WORKSPACE.SETTINGS]: undefined;
 };
 
 type SettingsNavigatorParamList = {
@@ -91,8 +94,8 @@ type SettingsNavigatorParamList = {
     [SCREENS.SETTINGS.ADD_BANK_ACCOUNT]: undefined;
     [SCREENS.SETTINGS.STATUS]: undefined;
     [SCREENS.SETTINGS.STATUS_SET]: undefined;
-    [SCREENS.WORKSPACE.INITIAL]: undefined;
-    [SCREENS.WORKSPACE.SETTINGS]: undefined;
+    // [SCREENS.WORKSPACE.INITIAL]: undefined;
+    // [SCREENS.WORKSPACE.SETTINGS]: undefined;
     [SCREENS.WORKSPACE.CURRENCY]: undefined;
     [SCREENS.WORKSPACE.CARD]: {
         policyID: string;
@@ -371,6 +374,7 @@ type BottomTabNavigatorParamList = {
     [SCREENS.HOME]: undefined;
     [SCREENS.SETTINGS_IDEAL]: undefined;
     [SCREENS.WORKSPACE_SETTINGS_IDEAL]: undefined;
+    [SCREENS.WORKSPACE.INITIAL]: undefined;
 };
 
 type PublicScreensParamList = {

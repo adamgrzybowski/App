@@ -1,9 +1,9 @@
 import {getActionFromState} from '@react-navigation/core';
-import {NavigationAction, NavigationContainerRef, NavigationState} from '@react-navigation/native';
+import {NavigationAction, NavigationContainerRef, NavigationState, PartialState, StackActions} from '@react-navigation/native';
 import {Writable} from 'type-fest';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
-import {Route} from '@src/ROUTES';
+import ROUTES, {Route} from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
 import getMatchingTabNameForState from './getMatchingTabNameForState';
 import getStateFromPath from './getStateFromPath';
@@ -59,6 +59,13 @@ function getMinimalAction(action: NavigationAction, state: NavigationState): Wri
     return currentAction;
 }
 
+function getActionForBottomTabNavigator(action: StackNavigationAction, state: NavigationState): Writable<NavigationAction> {
+    const bottomTabNavigatorKey = state.routes.at(0)?.state?.key;
+    const params = action.payload.params as ActionPayloadParams;
+    const screen = params.screen;
+    return {type: CONST.NAVIGATION.ACTION_TYPE.PUSH, payload: {name: screen, params: params.params}, target: bottomTabNavigatorKey};
+}
+
 export default function linkTo(navigation: NavigationContainerRef<RootStackParamList> | null, path: Route, type?: string, isActiveRoute?: boolean) {
     if (!navigation) {
         throw new Error("Couldn't find a navigation object. Is your component inside a screen in a navigator?");
@@ -107,6 +114,11 @@ export default function linkTo(navigation: NavigationContainerRef<RootStackParam
             // If this action is navigating to the RightModalNavigator and the last route on the root navigator is not RightModalNavigator then push
         } else if (action.payload.name === NAVIGATORS.RIGHT_MODAL_NAVIGATOR && rootState.routes.at(-1)?.name !== NAVIGATORS.RIGHT_MODAL_NAVIGATOR) {
             action.type = CONST.NAVIGATION.ACTION_TYPE.PUSH;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        } else if (action.payload.name === NAVIGATORS.BOTTOM_TAB_NAVIGATOR) {
+            const actionForBottomTabNavigator = getActionForBottomTabNavigator(action, rootState);
+            root.dispatch(actionForBottomTabNavigator);
+            return;
         }
     }
 

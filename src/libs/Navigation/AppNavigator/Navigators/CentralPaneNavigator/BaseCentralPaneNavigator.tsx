@@ -12,6 +12,9 @@ const Stack = createStackNavigator<CentralPaneNavigatorParamList>();
 const url = getCurrentUrl();
 const openOnAdminRoom = url ? new URL(url).searchParams.get('openOnAdminRoom') : undefined;
 
+const loadWorkspaceListPage = () => require('../../../../../pages/workspace/WorkspacesListPage').default as React.ComponentType;
+const loadWorkspaceSettingsPage = () => require('../../../../../pages/workspace/WorkspaceSettingsPage').default as React.ComponentType;
+
 function TestScreen() {
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -43,6 +46,14 @@ function BaseCentralPaneNavigator() {
                 // We do it this way to avoid adding the url params to url
                 initialParams={{openOnAdminRoom: openOnAdminRoom === 'true' || undefined}}
                 component={ReportScreenWrapper}
+            />
+            <Stack.Screen
+                name={SCREENS.SETTINGS.WORKSPACES}
+                getComponent={loadWorkspaceListPage}
+            />
+            <Stack.Screen
+                name={SCREENS.WORKSPACE.SETTINGS}
+                getComponent={loadWorkspaceSettingsPage}
             />
             <Stack.Screen
                 name={SCREENS.WORKSPACES_IDEAL}

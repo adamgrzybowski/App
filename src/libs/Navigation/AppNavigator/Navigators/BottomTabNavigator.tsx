@@ -12,6 +12,7 @@ import ROUTES from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
 
 type BottomTabNavigatorProps = StackScreenProps<AuthScreensParamList, typeof NAVIGATORS.BOTTOM_TAB_NAVIGATOR>;
+const loadWorkspaceInitialPage = () => require('../../../../pages/workspace/WorkspaceInitialPage').default as React.ComponentType;
 
 const Tab = createCustomBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -55,6 +56,10 @@ function BottomTabNavigator() {
             <Tab.Screen
                 name={SCREENS.WORKSPACE_SETTINGS_IDEAL}
                 component={ThirdTab}
+            />
+            <Tab.Screen
+                name={SCREENS.WORKSPACE.INITIAL}
+                getComponent={loadWorkspaceInitialPage}
             />
         </Tab.Navigator>
     );

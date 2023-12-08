@@ -26,10 +26,11 @@ function BottomTabBar({navigation}: BottomTabBarProps) {
         <View style={styles.bottomTabBarContainer}>
             <PressableWithFeedback
                 onPress={() => {
-                    navigation.push(SCREENS.HOME);
-                    if (!isSmallScreenWidth) {
-                        Navigation.navigate(ROUTES.REPORT);
-                    }
+                    // navigation.push(SCREENS.HOME);
+                    Navigation.navigate(ROUTES.HOME);
+                    // if (!isSmallScreenWidth) {
+                    //     Navigation.navigate(ROUTES.REPORT);
+                    // }
                 }}
                 role={CONST.ACCESSIBILITY_ROLE.BUTTON}
                 accessibilityLabel="Chats"
@@ -42,10 +43,11 @@ function BottomTabBar({navigation}: BottomTabBarProps) {
             <BottomTabBarFloatingActionButton />
             <PressableWithFeedback
                 onPress={() => {
-                    navigation.push(SCREENS.SETTINGS_IDEAL);
-                    if (!isSmallScreenWidth) {
-                        Navigation.navigate(ROUTES.WORKSPACES_IDEAL);
-                    }
+                    // navigation.push(SCREENS.SETTINGS_IDEAL);
+                    Navigation.navigate(ROUTES.SETTINGS_IDEAL);
+                    // if (!isSmallScreenWidth) {
+                    //     Navigation.navigate(ROUTES.SETTINGS_WORKSPACES);
+                    // }
                 }}
                 role={CONST.ACCESSIBILITY_ROLE.BUTTON}
                 accessibilityLabel="Settings"

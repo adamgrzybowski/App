@@ -7,13 +7,13 @@ function getTopmostCentralPaneName(state: State): CentralPaneName | undefined {
         return;
     }
 
-    const topmostCentralPane = state.routes.filter((route) => typeof route !== 'number' && 'name' in route && route.name === NAVIGATORS.CENTRAL_PANE_NAVIGATOR).at(-1);
+    const topmostCentralPane = state.routes.filter((route) => route.name === NAVIGATORS.CENTRAL_PANE_NAVIGATOR).at(-1);
 
-    if (!topmostCentralPane || typeof topmostCentralPane === 'number' || !('state' in topmostCentralPane)) {
+    if (!topmostCentralPane) {
         return;
     }
 
-    if ('params' in topmostCentralPane && !!topmostCentralPane.params && 'screen' in topmostCentralPane.params && !!topmostCentralPane.params.screen) {
+    if (!!topmostCentralPane.params && 'screen' in topmostCentralPane.params && !!topmostCentralPane.params.screen) {
         return topmostCentralPane.params.screen as CentralPaneName;
     }
 
